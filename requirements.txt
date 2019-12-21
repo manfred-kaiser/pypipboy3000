@@ -1,4 +1,0 @@
-pygame
-requests
-xmltodict
-numpy
