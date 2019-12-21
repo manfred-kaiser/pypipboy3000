@@ -1,3 +1,4 @@
+import pkg_resources
 import pygame
 
 WIDTH = 320
@@ -42,19 +43,19 @@ GPIO_ACTIONS = {
 
 
 MAP_ICONS = {
-	"camp": 		pygame.image.load('data/images/map_icons/camp.png'),
-	"factory": 		pygame.image.load('data/images/map_icons/factory.png'),
-	"metro": 		pygame.image.load('data/images/map_icons/metro.png'),
-	"misc": 		pygame.image.load('data/images/map_icons/misc.png'),
-	"monument": 	pygame.image.load('data/images/map_icons/monument.png'),
-	"vault": 		pygame.image.load('data/images/map_icons/vault.png'),
-	"settlement": 	pygame.image.load('data/images/map_icons/settlement.png'),
-	"ruin": 		pygame.image.load('data/images/map_icons/ruin.png'),
-	"cave": 		pygame.image.load('data/images/map_icons/cave.png'),
-	"landmark": 	pygame.image.load('data/images/map_icons/landmark.png'),
-	"city": 		pygame.image.load('data/images/map_icons/city.png'),
-	"office": 		pygame.image.load('data/images/map_icons/office.png'),
-	"sewer": 		pygame.image.load('data/images/map_icons/sewer.png'),
+	"camp": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/camp.png')),
+	"factory": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/factory.png')),
+	"metro": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/metro.png')),
+	"misc": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/misc.png')),
+	"monument": 	pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/monument.png')),
+	"vault": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/vault.png')),
+	"settlement": 	pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/settlement.png')),
+	"ruin": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/ruin.png')),
+	"cave": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/cave.png')),
+	"landmark": 	pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/landmark.png')),
+	"city": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/city.png')),
+	"office": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/office.png')),
+	"sewer": 		pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/map_icons/sewer.png')),
 }
 
 AMENITIES = {
@@ -83,4 +84,4 @@ AMENITIES = {
 pygame.font.init()
 FONTS = {}
 for x in range(10, 28):
-	FONTS[x] = pygame.font.Font('data/monofonto.ttf', x)
+	FONTS[x] = pygame.font.Font(pkg_resources.resource_filename('pypipboy', 'data/monofonto.ttf'), x)

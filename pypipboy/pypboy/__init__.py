@@ -1,7 +1,9 @@
+import pkg_resources
+import pkg_resources
 import pygame
-import game
-import config
-import pypboy.ui
+from pypipboy import game
+from pypipboy import config
+import pypipboy.pypboy.ui
 
 if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
@@ -21,7 +23,7 @@ class BaseModule(game.EntityGroup):
 		self.pypboy = boy
 		self.position = (0, 40)
 
-		self.footer = pypboy.ui.Footer()
+		self.footer = pypipboy.pypboy.ui.Footer()
 		self.footer.menu = []
 		for mod in self.submodules:
 			self.footer.menu.append(mod.label)
@@ -36,7 +38,7 @@ class BaseModule(game.EntityGroup):
 			"resume": self.handle_resume
 		}
 		if config.SOUND_ENABLED:
-			self.module_change_sfx = pygame.mixer.Sound('data/sounds/module_change.ogg')
+			self.module_change_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/module_change.ogg'))
 
 	def move(self, x, y):
 		super(BaseModule, self).move(x, y)
@@ -100,7 +102,7 @@ class SubModule(game.EntityGroup):
 		}
 
 		if config.SOUND_ENABLED:
-			self.submodule_change_sfx = pygame.mixer.Sound('data/sounds/submodule_change.ogg')
+			self.submodule_change_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/submodule_change.ogg'))
 
 	def handle_action(self, action, value=0):
 		if action.startswith("dial_"):

@@ -1,9 +1,10 @@
+import pkg_resources
 import os
-import game
-import config
+from pypipboy import game
+from pypipboy import config
 import pygame
 import threading
-import pypboy.data
+import pypipboy.pypboy.data
 
 from random import choice 
 
@@ -19,7 +20,7 @@ class Map(game.Entity):
 	_render_rect = None
 
 	def __init__(self, width, render_rect=None, *args, **kwargs):
-		self._mapper = pypboy.data.Maps()
+		self._mapper = pypipboy.pypboy.data.Maps()
 		self._size = width
 		self._map_surface = pygame.Surface((width, width))
 		self._render_rect = render_rect
@@ -74,7 +75,7 @@ class MapSquare(game.Entity):
 	map_position = (0, 0)
 
 	def __init__(self, size, map_position, parent, *args, **kwargs):
-		self._mapper = pypboy.data.Maps()
+		self._mapper = pypipboy.pypboy.data.Maps()
 		self._size = size
 		self.parent = parent
 		self._map_surface = pygame.Surface((size * 2, size * 2))
@@ -241,5 +242,5 @@ class RadioStation(game.Entity):
 class GalaxyNewsRadio(RadioStation):
 
 	def __init__(self, *args, **kwargs):
-		self.directory = 'data/sounds/radio/gnr/'
+		self.directory = pkg_resources.resource_filename('pypipboy', 'data/sounds/radio/gnr/')
 		super(GalaxyNewsRadio, self).__init__(self, *args, **kwargs)

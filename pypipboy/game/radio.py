@@ -1,5 +1,6 @@
 # encoding=utf-8
 
+import pkg_resources
 import game
 import os
 import pygame
@@ -72,8 +73,8 @@ class Radio(game.Entity):
             
             metadata = mutagen.File(filename, easy = True)
 			
-		selectFont = pygame.font.Font('data/monofonto.ttf', 24)
-		basicFont = pygame.font.Font('data/monofonto.ttf', 22)
+		selectFont = pygame.font.Font(pkg_resources.resource_filename('pypipboy', 'data/monofonto.ttf'), 24)
+		basicFont = pygame.font.Font(pkg_resources.resource_filename('pypipboy', 'data/monofonto.ttf'), 22)
         
         text = selectFont.render(game.Entity.name, True, (105, 251, 187), (0, 0, 0))
         

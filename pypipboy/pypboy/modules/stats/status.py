@@ -1,8 +1,9 @@
-import pypboy
+import pkg_resources
+from pypipboy import pypboy
 import pygame
-import game
-import config
-import pypboy.ui
+from pypipboy import game
+from pypipboy import config
+import pypipboy.pypboy.ui
 
 
 class Module(pypboy.SubModule):
@@ -15,7 +16,7 @@ class Module(pypboy.SubModule):
 		health.rect[0] = 4
 		health.rect[1] = 40
 		self.add(health)
-		self.menu = pypboy.ui.Menu(100, ["CND", "RAD", "EFF"], [self.show_cnd, self.show_rad, self.show_eff], 0)
+		self.menu = pypipboy.pypboy.ui.Menu(100, ["CND", "RAD", "EFF"], [self.show_cnd, self.show_rad, self.show_eff], 0)
 		self.menu.rect[0] = 4
 		self.menu.rect[1] = 60
 		self.add(self.menu)
@@ -39,7 +40,7 @@ class Health(game.Entity):
 
 	def __init__(self):
 		super(Health, self).__init__()
-		self.image = pygame.image.load('data/images/pipboy.png')
+		self.image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/pipboy.png'))
 		self.rect = self.image.get_rect()
 		self.image = self.image.convert()
 		text = config.FONTS[18].render("Grieve - Level 27", True, (105, 251, 187), (0, 0, 0))

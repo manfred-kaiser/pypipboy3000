@@ -1,6 +1,8 @@
 import pygame
-import config
 import os
+
+
+from pypipboy import config
 
 # Init framebuffer/touchscreen environment variables
 #os.putenv('SDL_VIDEODRIVER', 'fbcon')
@@ -16,7 +18,7 @@ except Exception as e:
     print("GPIO UNAVAILABLE ({})".format(e))
     config.GPIO_AVAILABLE = False
 
-from pypboy.core import Pypboy
+from pypipboy.pypboy.core import Pypboy
 
 try:
     pygame.mixer.init(44100, -16, 2, 2048)
@@ -24,7 +26,8 @@ try:
 except:
     config.SOUND_ENABLED = False
 
-if __name__ == "__main__":
+
+def main():
     boy = Pypboy('Pip-Boy 3000', config.WIDTH, config.HEIGHT)
     print("RUN")
     boy.run()

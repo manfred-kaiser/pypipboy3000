@@ -1,4 +1,4 @@
-import pypboy
+from pypipboy import pypboy
 
 
 class Module(pypboy.SubModule):

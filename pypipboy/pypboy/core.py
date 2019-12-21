@@ -1,15 +1,19 @@
+import pkg_resources
 import pygame
-import config
-import game
-import pypboy.ui
 
-from pypboy.modules import data
-from pypboy.modules import items
-from pypboy.modules import stats
+from pypipboy.pypboy.modules import data
+from pypipboy.pypboy.modules import items
+from pypipboy.pypboy.modules import stats
+
+from pypipboy import config
 
 if config.GPIO_AVAILABLE:
 	import RPi.GPIO as GPIO
 
+
+from pypipboy import config
+from pypipboy import game
+import pypipboy.pypboy.ui
 
 class Pypboy(game.core.Engine):
 
@@ -25,14 +29,14 @@ class Pypboy(game.core.Engine):
 			self.init_gpio_controls()
 
 	def init_children(self):
-		self.background = pygame.image.load('data/images/overlay.png')
-		# border = pypboy.ui.Border()
+		self.background = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
+		# border = pypipboy.pypboy.ui.Border()
 		# self.root_children.add(border)
-		self.header = pypboy.ui.Header()
+		self.header = pypipboy.pypboy.ui.Header()
 		self.root_children.add(self.header)
-		scanlines = pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
+		scanlines = pypipboy.pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
 		self.root_children.add(scanlines)
-		scanlines2 = pypboy.ui.Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
+		scanlines2 = pypipboy.pypboy.ui.Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
 		self.root_children.add(scanlines2)
 
 	def init_modules(self):

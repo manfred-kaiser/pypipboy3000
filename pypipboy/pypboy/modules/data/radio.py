@@ -1,7 +1,7 @@
-import pypboy
-import config
+from pypipboy import pypboy
+from pypipboy import config
 
-from pypboy.modules.data import entities
+from pypipboy.pypboy.modules.data import entities
 
 class Module(pypboy.SubModule):
 

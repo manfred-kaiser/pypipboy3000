@@ -1,8 +1,10 @@
-import game
-import config
+import pkg_resources
 import pygame
 import datetime
 
+
+from pypipboy import game
+from pypipboy import config
 
 class Header(game.Entity):
 
@@ -83,7 +85,7 @@ class Menu(game.Entity):
 		self.select(selected)
 
 		if config.SOUND_ENABLED:
-			self.dial_move_sfx = pygame.mixer.Sound('data/sounds/dial_move.ogg')
+			self.dial_move_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/dial_move.ogg'))
 
 	def select(self, item):
 		self.selected = item
@@ -152,7 +154,7 @@ class Scanlines(game.Entity):
 
 class Overlay(game.Entity):
 	def __init__(self):
-		self.image = pygame.image.load('data/images/overlay.png')
+		self.image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
 		super(Overlay, self).__init__((config.WIDTH, config.HEIGHT))
 		self.blit_alpha(self, self.image, (0, 0), 128)
 
@@ -169,5 +171,5 @@ class Overlay(game.Entity):
 class Border(game.Entity):
 	def __init__(self):
 		super(Border, self).__init__()
-		self.image = pygame.image.load('data/images/border.png')
+		self.image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/border.png'))
 		self.rect = self.image.get_rect()
