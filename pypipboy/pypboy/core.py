@@ -25,7 +25,7 @@ class Pypboy(game.core.Engine):
 			self.init_gpio_controls()
 
 	def init_children(self):
-		self.background = pygame.image.load('images/overlay.png')
+		self.background = pygame.image.load('data/images/overlay.png')
 		# border = pypboy.ui.Border()
 		# self.root_children.add(border)
 		self.header = pypboy.ui.Header()

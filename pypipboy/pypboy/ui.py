@@ -83,7 +83,7 @@ class Menu(game.Entity):
 		self.select(selected)
 
 		if config.SOUND_ENABLED:
-			self.dial_move_sfx = pygame.mixer.Sound('sounds/dial_move.ogg')
+			self.dial_move_sfx = pygame.mixer.Sound('data/sounds/dial_move.ogg')
 
 	def select(self, item):
 		self.selected = item
@@ -152,7 +152,7 @@ class Scanlines(game.Entity):
 
 class Overlay(game.Entity):
 	def __init__(self):
-		self.image = pygame.image.load('images/overlay.png')
+		self.image = pygame.image.load('data/images/overlay.png')
 		super(Overlay, self).__init__((config.WIDTH, config.HEIGHT))
 		self.blit_alpha(self, self.image, (0, 0), 128)
 
@@ -169,5 +169,5 @@ class Overlay(game.Entity):
 class Border(game.Entity):
 	def __init__(self):
 		super(Border, self).__init__()
-		self.image = pygame.image.load('images/border.png')
+		self.image = pygame.image.load('data/images/border.png')
 		self.rect = self.image.get_rect()

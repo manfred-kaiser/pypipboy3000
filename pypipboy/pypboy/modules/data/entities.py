@@ -241,5 +241,5 @@ class RadioStation(game.Entity):
 class GalaxyNewsRadio(RadioStation):
 
 	def __init__(self, *args, **kwargs):
-		self.directory = 'sounds/radio/gnr/'
+		self.directory = 'data/sounds/radio/gnr/'
 		super(GalaxyNewsRadio, self).__init__(self, *args, **kwargs)

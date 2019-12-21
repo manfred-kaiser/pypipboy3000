@@ -72,8 +72,8 @@ class Radio(game.Entity):
             
             metadata = mutagen.File(filename, easy = True)
 			
-		selectFont = pygame.font.Font('monofonto.ttf', 24)
-		basicFont = pygame.font.Font('monofonto.ttf', 22)
+		selectFont = pygame.font.Font('data/monofonto.ttf', 24)
+		basicFont = pygame.font.Font('data/monofonto.ttf', 22)
         
         text = selectFont.render(game.Entity.name, True, (105, 251, 187), (0, 0, 0))
         

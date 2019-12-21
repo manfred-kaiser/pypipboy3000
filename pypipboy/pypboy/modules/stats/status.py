@@ -39,7 +39,7 @@ class Health(game.Entity):
 
 	def __init__(self):
 		super(Health, self).__init__()
-		self.image = pygame.image.load('images/pipboy.png')
+		self.image = pygame.image.load('data/images/pipboy.png')
 		self.rect = self.image.get_rect()
 		self.image = self.image.convert()
 		text = config.FONTS[18].render("Grieve - Level 27", True, (105, 251, 187), (0, 0, 0))
