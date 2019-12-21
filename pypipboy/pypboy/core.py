@@ -5,7 +5,6 @@ from pypipboy.pypboy.modules import data
 from pypipboy.pypboy.modules import items
 from pypipboy.pypboy.modules import stats
 
-from pypipboy import config
 
 try:
     import RPi.GPIO as GPIO
