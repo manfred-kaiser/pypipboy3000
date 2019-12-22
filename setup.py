@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': ['pypipboy=pypipboy.main:main'],
     },
-    install_required=[
+    install_requires=[
         'pygame',
         'requests',
         'xmltodict',
