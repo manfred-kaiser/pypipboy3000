@@ -3,6 +3,7 @@ import pygame
 from pypipboy import game
 from pypipboy import config
 import pypipboy.pypboy.ui
+from pypipboy.pypboy.ui import Menu
 
 try:
     import RPi.GPIO as GPIO
@@ -89,13 +90,20 @@ class BaseModule(game.EntityGroup):
             GPIO.output(self.GPIO_LED_ID, True)
         if config.SOUND_ENABLED:
             self.module_change_sfx.play()
+        self.active.handle_action("resume")
 
 
 class SubModule(game.EntityGroup):
 
+    label = None
+    headline = None
+    title = None
+
     def __init__(self, parent, *args, **kwargs):
         super(SubModule, self).__init__()
         self.parent = parent
+        self.menu = Menu(self)
+        self.add(self.menu)
 
         self.action_handlers = {
             "pause": self.handle_pause,
@@ -106,9 +114,8 @@ class SubModule(game.EntityGroup):
             self.submodule_change_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/submodule_change.ogg'))
 
     def handle_action(self, action, value=0):
-        if action.startswith("dial_"):
-            if hasattr(self, "menu"):
-                self.menu.handle_action(action)
+        if action.startswith("dial_") and self.menu:
+            self.menu.handle_action(action)
         elif action in self.action_handlers:
             self.action_handlers[action]()
 
@@ -119,6 +126,7 @@ class SubModule(game.EntityGroup):
         self.paused = True
 
     def handle_resume(self):
+        self.parent.pypboy.set_title(self.headline, self.title)
         self.paused = False
         if config.SOUND_ENABLED:
             self.submodule_change_sfx.play()

@@ -1,6 +1,7 @@
 import pkg_resources
 import datetime
 import pygame
+from collections import defaultdict
 
 from pypipboy import game
 from pypipboy import config
@@ -9,9 +10,9 @@ from pypipboy import config
 class Header(game.Entity):
 
     def __init__(self, headline="", title=""):
+        super(Header, self).__init__((config.WIDTH, config.HEIGHT))
         self.headline = headline
         self.title = title
-        super(Header, self).__init__((config.WIDTH, config.HEIGHT))
         self.rect[0] = 4
         self._date = None
 
@@ -77,23 +78,32 @@ class Footer(game.Entity):
 
 class Menu(game.Entity):
 
-    def __init__(self, width, items=[], callbacks=[], selected=0):
+    def __init__(self, submodule, width=100, selected=0):
         super(Menu, self).__init__((width, config.HEIGHT - 80))
-        self.items = items
-        self.callbacks = callbacks
-        self.selected = 0
-        self.select(selected)
-
+        self.submodule = submodule
+        self._items = defaultdict(list)
+        self.selected = selected
+        self.rect[0] = 4
+        self.rect[1] = 60
         if config.SOUND_ENABLED:
             self.dial_move_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/dial_move.ogg'))
+
+    @property
+    def items(self):
+        return self._items[self.submodule]
+
+    def add_item(self, item):
+        self.items.append(item)
+        self.redraw()
 
     def select(self, item):
         self.selected = item
         self.redraw()
-        if len(self.callbacks) > item and self.callbacks[item]:
-            self.callbacks[item]()
+        self.items[item].on_select()
 
     def handle_action(self, action):
+        if not self.items:
+            return
         if action == "dial_up":
             if self.selected > 0:
                 if config.SOUND_ENABLED:
@@ -109,12 +119,27 @@ class Menu(game.Entity):
         self.image.fill((0, 0, 0))
         offset = 5
         for i in range(len(self.items)):
-            text = config.FONTS[14].render(" %s " % self.items[i], True, (105, 255, 187), (0, 0, 0))
+            text = config.FONTS[14].render(" %s " % self.items[i].title, True, (105, 255, 187), (0, 0, 0))
             if i == self.selected:
                 selected_rect = (5, offset - 2, text.get_size()[0] + 6, text.get_size()[1] + 3)
                 pygame.draw.rect(self.image, (95, 255, 177), selected_rect, 2)
             self.image.blit(text, (10, offset))
             offset += text.get_size()[1] + 6
+
+
+class MenuItem():
+
+    def __init__(self, title, callback=None):
+        self.title = title
+        self.callback = callback
+
+    def on_select(self):
+        self.execute()
+        if self.callback:
+            self.callback()
+
+    def execute(self):
+        pass
 
 
 class Scanlines(game.Entity):

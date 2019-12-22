@@ -1,11 +1,6 @@
 import pkg_resources
 import pygame
 
-from pypipboy.pypboy.modules import data
-from pypipboy.pypboy.modules import items
-from pypipboy.pypboy.modules import stats
-
-
 try:
     import RPi.GPIO as GPIO
 except ImportError:
@@ -13,41 +8,49 @@ except ImportError:
 
 from pypipboy import config
 from pypipboy import game
-import pypipboy.pypboy.ui
+
+from pypipboy.pypboy.modules import data
+from pypipboy.pypboy.modules import items
+from pypipboy.pypboy.modules import stats
+
+from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 
 class Pypboy(game.core.Engine):
 
     def __init__(self, *args, **kwargs):
         super(Pypboy, self).__init__(*args, **kwargs)
-        self.init_children()
-        self.init_modules()
 
-        self.gpio_actions = {}
-        self.init_gpio_controls()
-
-    def init_children(self):
+        self.header = Header()
+        self.border = Border()
+        self.scanlines = [
+            Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)]),
+            Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
+        ]
         self.background = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
-        # border = pypipboy.pypboy.ui.Border()
-        # self.root_children.add(border)
-        self.header = pypipboy.pypboy.ui.Header()
-        self.root_children.add(self.header)
-        scanlines = pypipboy.pypboy.ui.Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)])
-        self.root_children.add(scanlines)
-        scanlines2 = pypipboy.pypboy.ui.Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
-        self.root_children.add(scanlines2)
 
-    def init_modules(self):
         self.modules = {
             "data": data.Module(self),
             "items": items.Module(self),
             "stats": stats.Module(self)
         }
+
+        self._init_modules()
+
+        self.gpio_actions = {}
+        self._init_gpio_controls()
+
+    def _init_modules(self):
+        self.root_children.add(self.header)
+        self.root_children.add(Border())
+        for scanline in self.scanlines:
+            self.root_children.add(scanline)
+
         for module in self.modules.values():
             module.move(4, 40)
         self.switch_module("stats")
 
-    def init_gpio_controls(self):
+    def _init_gpio_controls(self):
         if not config.GPIO_AVAILABLE:
             return
         for pin in config.GPIO_ACTIONS.keys():
@@ -59,6 +62,10 @@ class Pypboy(game.core.Engine):
         for pin in self.gpio_actions.keys():
             if not GPIO.input(pin):
                 self.handle_action(self.gpio_actions[pin])
+
+    def set_title(self, headline, title):
+        self.header.headline = headline
+        self.header.title = title
 
     def update(self):
         if hasattr(self, 'active'):
