@@ -7,7 +7,7 @@ setup(
     description='Python PIP Boy',
     author='Manfred Kaiser',
     author_email='manfred.kaiser@logfile.at',
-    url='https://www.python.org/sigs/distutils-sig/',
+    url='https://github.com/manfred-kaiser/pypipboy3000',
     packages=find_packages(),
     package_data={
         'pypipboy': [
@@ -18,10 +18,10 @@ setup(
             'data/sounds/radio/gnr/*.*'
         ],
     },
-    entry_points = {
+    entry_points={
         'console_scripts': ['pypipboy=pypipboy.main:main'],
     },
-    install_required=[
+    install_requires=[
         'pygame',
         'requests',
         'xmltodict',
