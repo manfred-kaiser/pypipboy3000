@@ -1,9 +1,9 @@
 from pypipboy.pypboy import BaseModule
-from pypipboy.pypboy.modules.items import weapons
-from pypipboy.pypboy.modules.items import apparel
-from pypipboy.pypboy.modules.items import aid
-from pypipboy.pypboy.modules.items import misc
-from pypipboy.pypboy.modules.items import ammo
+from pypipboy.modules.items import weapons
+from pypipboy.modules.items import apparel
+from pypipboy.modules.items import aid
+from pypipboy.modules.items import misc
+from pypipboy.modules.items import ammo
 
 
 class Module(BaseModule):

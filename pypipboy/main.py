@@ -19,9 +19,9 @@ except ImportError:
     config.GPIO_AVAILABLE = False
 
 from pypipboy.pypboy.core import Pypboy
-from pypipboy.pypboy.modules import data
-from pypipboy.pypboy.modules import items
-from pypipboy.pypboy.modules import stats
+from pypipboy.modules import data
+from pypipboy.modules import items
+from pypipboy.modules import stats
 
 try:
     pygame.mixer.init(44100, -16, 2, 2048)

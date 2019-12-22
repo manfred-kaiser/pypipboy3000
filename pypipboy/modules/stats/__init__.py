@@ -1,9 +1,9 @@
 from pypipboy.pypboy import BaseModule
-from pypipboy.pypboy.modules.stats import status
-from pypipboy.pypboy.modules.stats import special
-from pypipboy.pypboy.modules.stats import skills
-from pypipboy.pypboy.modules.stats import perks
-from pypipboy.pypboy.modules.stats import general
+from pypipboy.modules.stats import status
+from pypipboy.modules.stats import special
+from pypipboy.modules.stats import skills
+from pypipboy.modules.stats import perks
+from pypipboy.modules.stats import general
 
 
 class Module(BaseModule):

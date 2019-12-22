@@ -1,9 +1,9 @@
 from pypipboy.pypboy import BaseModule
-from pypipboy.pypboy.modules.data import local_map
-from pypipboy.pypboy.modules.data import world_map
-from pypipboy.pypboy.modules.data import quests
-from pypipboy.pypboy.modules.data import misc
-from pypipboy.pypboy.modules.data import radio
+from pypipboy.modules.data import local_map
+from pypipboy.modules.data import world_map
+from pypipboy.modules.data import quests
+from pypipboy.modules.data import misc
+from pypipboy.modules.data import radio
 
 
 class Module(BaseModule):
