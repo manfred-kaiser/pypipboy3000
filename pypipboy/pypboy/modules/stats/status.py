@@ -2,7 +2,6 @@ import pkg_resources
 from pypipboy import pypboy
 import pygame
 from pypipboy import game
-from pypipboy import config
 import pypipboy.pypboy.ui
 
 
@@ -40,9 +39,6 @@ class Health(game.Entity):
 
     def __init__(self):
         super(Health, self).__init__()
-        self.image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/pipboy.png'))
-        self.rect = self.image.get_rect()
-        self.image = self.image.convert()
-        text = config.FONTS[18].render("Grieve - Level 27", True, (105, 251, 187), (0, 0, 0))
-        text_width = text.get_size()[0]
-        self.image.blit(text, (config.WIDTH / 2 - 8 - text_width / 2, 250))
+        image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/pipboy.png'))
+        self.rect = image.get_rect()
+        self.image = image.convert()
