@@ -19,6 +19,9 @@ except ImportError:
     config.GPIO_AVAILABLE = False
 
 from pypipboy.pypboy.core import Pypboy
+from pypipboy.pypboy.modules import data
+from pypipboy.pypboy.modules import items
+from pypipboy.pypboy.modules import stats
 
 try:
     pygame.mixer.init(44100, -16, 2, 2048)
@@ -29,4 +32,9 @@ except Exception:
 
 def main():
     boy = Pypboy('Pip-Boy 3000', config.WIDTH, config.HEIGHT)
-    boy.run()
+
+    boy.add_module('data', data.Module)
+    boy.add_module('items', items.Module)
+    boy.add_module('stats', stats.Module)
+
+    boy.run('stats')

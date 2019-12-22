@@ -9,10 +9,6 @@ except ImportError:
 from pypipboy import config
 from pypipboy import game
 
-from pypipboy.pypboy.modules import data
-from pypipboy.pypboy.modules import items
-from pypipboy.pypboy.modules import stats
-
 from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 
@@ -30,16 +26,11 @@ class Pypboy(game.core.Engine):
         ]
         self.background = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
 
-        self.modules = {
-            "data": data.Module(self),
-            "items": items.Module(self),
-            "stats": stats.Module(self)
-        }
-
-        self._init_modules()
-
+        self.modules = {}
         self.gpio_actions = {}
-        self._init_gpio_controls()
+
+    def add_module(self, module_name, module_cls):
+        self.modules[module_name] = module_cls(self)
 
     def _init_modules(self):
         self.root_children.add(self.header)
@@ -49,7 +40,6 @@ class Pypboy(game.core.Engine):
 
         for module in self.modules.values():
             module.move(4, 40)
-        self.switch_module("stats")
 
     def _init_gpio_controls(self):
         if not config.GPIO_AVAILABLE:
@@ -114,7 +104,10 @@ class Pypboy(game.core.Engine):
             if self.active:
                 self.active.handle_event(event)
 
-    def run(self):
+    def run(self, start_module):
+        self._init_modules()
+        self._init_gpio_controls()
+        self.switch_module(start_module)
         self.running = True
         while self.running:
             for event in pygame.event.get():
