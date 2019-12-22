@@ -112,3 +112,5 @@ for x in range(10, 28):
     FONTS[x] = pygame.font.Font(pkg_resources.resource_filename(
         'pypipboy', 'data/monofonto.ttf'
     ), x)
+
+radio = None

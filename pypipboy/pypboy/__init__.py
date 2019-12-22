@@ -45,11 +45,11 @@ class BaseModule(game.EntityGroup):
 
     def move(self, x, y):
         super(BaseModule, self).move(x, y)
-        if hasattr(self, 'active'):
+        if self.active:
             self.active.move(x, y)
 
     def switch_submodule(self, module):
-        if hasattr(self, 'active') and self.active:
+        if self.active:
             self.active.handle_action("pause")
             self.remove(self.active)
         if len(self.submodules) > module:
@@ -72,11 +72,11 @@ class BaseModule(game.EntityGroup):
         elif action in self.action_handlers:
             self.action_handlers[action]()
         else:
-            if hasattr(self, 'active') and self.active:
+            if self.active:
                 self.active.handle_action(action, value)
 
     def handle_event(self, event):
-        if hasattr(self, 'active') and self.active:
+        if self.active:
             self.active.handle_event(event)
 
     def handle_pause(self):

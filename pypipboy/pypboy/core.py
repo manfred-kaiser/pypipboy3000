@@ -21,6 +21,7 @@ class Pypboy(game.core.Engine):
     def __init__(self, *args, **kwargs):
         super(Pypboy, self).__init__(*args, **kwargs)
 
+        self.active = None
         self.header = Header()
         self.border = Border()
         self.scanlines = [
@@ -68,18 +69,18 @@ class Pypboy(game.core.Engine):
         self.header.title = title
 
     def update(self):
-        if hasattr(self, 'active'):
+        if self.active:
             self.active.update()
         super(Pypboy, self).update()
 
     def render(self):
         interval = super(Pypboy, self).render()
-        if hasattr(self, 'active'):
+        if self.active:
             self.active.render(interval)
 
     def switch_module(self, module):
         if module in self.modules:
-            if hasattr(self, 'active'):
+            if self.active:
                 self.active.handle_action("pause")
                 self.remove(self.active)
             self.active = self.modules[module]
@@ -94,7 +95,7 @@ class Pypboy(game.core.Engine):
         if action.startswith('module_'):
             self.switch_module(action[7:])
         else:
-            if hasattr(self, 'active'):
+            if self.active:
                 self.active.handle_action(action)
 
     def handle_event(self, event):
@@ -107,10 +108,10 @@ class Pypboy(game.core.Engine):
         elif event.type == pygame.QUIT:
             self.running = False
         elif event.type == config.EVENTS['SONG_END']:
-            if hasattr(config, 'radio'):
+            if config.radio:
                 config.radio.handle_event(event)
         else:
-            if hasattr(self, 'active'):
+            if self.active:
                 self.active.handle_event(event)
 
     def run(self):
