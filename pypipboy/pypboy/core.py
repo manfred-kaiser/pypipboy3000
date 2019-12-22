@@ -14,8 +14,8 @@ from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 class Pypboy(game.core.Engine):
 
-    def __init__(self, *args, **kwargs):
-        super(Pypboy, self).__init__(*args, **kwargs)
+    def __init__(self, pipboy_name):
+        super(Pypboy, self).__init__(pipboy_name, config.WIDTH, config.HEIGHT)
 
         self.active = None
         self.header = Header()

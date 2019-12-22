@@ -1,6 +1,12 @@
 import pkg_resources
 import pygame
 
+try:
+    pygame.mixer.init(44100, -16, 2, 2048)
+    SOUND_ENABLED = True
+except Exception:
+    SOUND_ENABLED = False
+
 WIDTH = 480
 HEIGHT = 320
 
@@ -23,9 +29,15 @@ ACTIONS = {
     pygame.K_DOWN: "dial_down"
 }
 
-SOUND_ENABLED = False
 
-GPIO_AVAILABLE = False
+try:
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BCM)
+    GPIO_AVAILABLE = True
+except ImportError:
+    print("GPIO UNAVAILABLE")
+    GPIO_AVAILABLE = False
+
 # Using GPIO.BCM as mode
 GPIO_ACTIONS = {
     4: "module_stats",  # GPIO 4
