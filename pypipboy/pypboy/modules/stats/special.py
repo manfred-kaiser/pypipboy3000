@@ -5,7 +5,7 @@ from pypipboy.pypboy.ui import MenuItem
 
 class Module(pypboy.SubModule):
 
-    label = "S.P.E.C.I.A.L."
+    LABEL = "S.P.E.C.I.A.L."
     headline = "STATUS"
     title = " HP 160/175  |  AP 62/62"
 

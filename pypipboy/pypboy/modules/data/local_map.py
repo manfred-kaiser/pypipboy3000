@@ -7,7 +7,7 @@ from pypipboy.pypboy.modules.data import entities
 
 class Module(pypboy.SubModule):
 
-    label = "Local Map"
+    LABEL = "Local Map"
 
     def __init__(self, *args, **kwargs):
         super(Module, self).__init__(*args, **kwargs)

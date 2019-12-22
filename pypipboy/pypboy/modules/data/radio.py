@@ -6,7 +6,7 @@ from pypipboy.pypboy.modules.data import entities
 
 class Module(pypboy.SubModule):
 
-    label = "Radio"
+    LABEL = "Radio"
 
     def __init__(self, *args, **kwargs):
         super(Module, self).__init__(*args, **kwargs)

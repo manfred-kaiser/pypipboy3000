@@ -8,7 +8,7 @@ from pypipboy.pypboy.modules.items import ammo
 
 class Module(BaseModule):
 
-    label = "ITEMS"
+    LABEL = "ITEMS"
     GPIO_LED_ID = 29  # GPIO27 #21
 
     MODULES = [

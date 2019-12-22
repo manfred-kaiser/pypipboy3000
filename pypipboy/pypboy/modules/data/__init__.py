@@ -8,7 +8,7 @@ from pypipboy.pypboy.modules.data import radio
 
 class Module(BaseModule):
 
-    label = "DATA"
+    LABEL = "DATA"
     GPIO_LED_ID = 28  # GPIO 23 #23
     MODULES = [
         local_map.Module,

@@ -96,7 +96,7 @@ class BaseModule(game.EntityGroup):
 
 class SubModule(game.EntityGroup):
 
-    label = None
+    LABEL = None
     headline = None
     title = None
 

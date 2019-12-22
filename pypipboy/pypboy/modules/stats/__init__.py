@@ -8,7 +8,7 @@ from pypipboy.pypboy.modules.stats import general
 
 class Module(BaseModule):
 
-    label = "STATS"
+    LABEL = "STATS"
     GPIO_LED_ID = 30  # GPIO 22 #19
 
     MODULES = [
