@@ -17,8 +17,3 @@ class Module(pypboy.SubModule):
         self.add(mapgrid)
         mapgrid.rect[0] = 4
         mapgrid.rect[1] = 40
-
-    def handle_resume(self):
-        self.parent.pypboy.header.headline = "DATA"
-        self.parent.pypboy.header.title = "Belfast City"
-        super(Module, self).handle_resume()
