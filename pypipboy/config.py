@@ -1,8 +1,8 @@
 import pkg_resources
 import pygame
 
-WIDTH = 320
-HEIGHT = 240
+WIDTH = 480
+HEIGHT = 320
 
 MAP_FOCUS = (-102.3016145, 21.8841274)
 
