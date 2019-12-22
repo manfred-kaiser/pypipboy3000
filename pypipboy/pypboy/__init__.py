@@ -13,11 +13,11 @@ except ImportError:
 
 class BaseModule(game.EntityGroup):
 
-    submodules = []
+    MODULES = []
 
     def __init__(self, boy, *args, **kwargs):
         super(BaseModule, self).__init__()
-
+        self.submodules = []
         if config.GPIO_AVAILABLE:
             GPIO.setup(self.GPIO_LED_ID, GPIO.OUT)
             GPIO.output(self.GPIO_LED_ID, False)
@@ -28,7 +28,8 @@ class BaseModule(game.EntityGroup):
 
         self.footer = pypipboy.pypboy.ui.Footer()
         self.footer.menu = []
-        for mod in self.submodules:
+        for mod in self.MODULES:
+            self.submodules.append(mod(self))
             self.footer.menu.append(mod.label)
         self.footer.selected = self.footer.menu[0]
         self.footer.position = (0, config.HEIGHT - 53)  # 80

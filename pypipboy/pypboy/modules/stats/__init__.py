@@ -11,12 +11,10 @@ class Module(BaseModule):
     label = "STATS"
     GPIO_LED_ID = 30  # GPIO 22 #19
 
-    def __init__(self, *args, **kwargs):
-        self.submodules = [
-            status.Module(self),
-            special.Module(self),
-            skills.Module(self),
-            perks.Module(self),
-            general.Module(self)
-        ]
-        super(Module, self).__init__(*args, **kwargs)
+    MODULES = [
+        status.Module,
+        special.Module,
+        skills.Module,
+        perks.Module,
+        general.Module
+    ]
