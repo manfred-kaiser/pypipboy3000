@@ -19,15 +19,12 @@ import pypipboy.pypboy.ui
 class Pypboy(game.core.Engine):
 
     def __init__(self, *args, **kwargs):
-        if hasattr(config, 'OUTPUT_WIDTH') and hasattr(config, 'OUTPUT_HEIGHT'):
-            self.rescale = True
         super(Pypboy, self).__init__(*args, **kwargs)
         self.init_children()
         self.init_modules()
 
         self.gpio_actions = {}
-        if config.GPIO_AVAILABLE:
-            self.init_gpio_controls()
+        self.init_gpio_controls()
 
     def init_children(self):
         self.background = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
@@ -51,6 +48,8 @@ class Pypboy(game.core.Engine):
         self.switch_module("stats")
 
     def init_gpio_controls(self):
+        if not config.GPIO_AVAILABLE:
+            return
         for pin in config.GPIO_ACTIONS.keys():
             print("Intialising pin {} as action '{}'".format(pin, config.GPIO_ACTIONS[pin]))
             GPIO.setup(pin, GPIO.IN)

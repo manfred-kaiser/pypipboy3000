@@ -19,7 +19,6 @@ class Engine(object):
         self.background = pygame.surface.Surface(self.screen.get_size()).convert()
         self.background.fill((0, 0, 0))
 
-        self.rescale = False
         self.last_render_time = 0
 
     def render(self):
