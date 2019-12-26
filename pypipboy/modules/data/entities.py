@@ -2,6 +2,7 @@ import pkg_resources
 import os
 from pypipboy import game
 from pypipboy import config
+from pypipboy.config import CONFIGFILE
 import pygame
 import threading
 import pypipboy.pypboy.data
@@ -19,7 +20,21 @@ class Map(game.Entity):
     _loading_size = 0
     _render_rect = None
 
+    _map_icon_path = 'data/images/map_icons'
+
+    MAP_ICONS = {}
+    AMENITIES = {}
+
     def __init__(self, width, render_rect=None, *args, **kwargs):
+
+        self.MAP_ICONS = {}
+        for icon in pkg_resources.resource_listdir('pypipboy', self._map_icon_path):
+            icon_name = icon.rsplit('.', 1)[0]
+            self.MAP_ICONS[icon_name] = pygame.image.load(pkg_resources.resource_filename(
+                'pypipboy', os.path.join(self._map_icon_path, icon)
+            ))
+        self.AMENITIES = {key: self.MAP_ICONS[value] for key, value in CONFIGFILE.items('MAPICONS')}
+
         self._mapper = pypipboy.pypboy.data.Maps()
         self._size = width
         self._map_surface = pygame.Surface((width, width))
@@ -29,7 +44,6 @@ class Map(game.Entity):
         self.image.blit(text, (10, 10))
 
     def fetch_map(self, position, radius):
-        # (-5.9234923, 54.5899493)
         self._fetching = threading.Thread(target=self._internal_fetch_map, args=(position, radius))
         self._fetching.start()
 
@@ -44,10 +58,10 @@ class Map(game.Entity):
         self._render_rect.move_ip(x, y)
 
     def get_map_icon(self, icon_name):
-        if icon_name in config.AMENITIES:
-            return config.AMENITIES[icon_name]
+        if icon_name in self.AMENITIES:
+            return self.AMENITIES[icon_name]
         print("Unknown amenity: {}".format(icon_name))
-        return config.AMENITIES['default']
+        return self.AMENITIES['default']
 
     def redraw_map(self, coef=1):
         self._map_surface.fill((0, 0, 0))

@@ -58,17 +58,6 @@ GPIO_ACTIONS = {
 }
 
 
-MAP_ICONS = {}
-map_icon_path = 'data/images/map_icons'
-for icon in pkg_resources.resource_listdir('pypipboy', map_icon_path):
-    icon_name = icon.rsplit('.', 1)[0]
-    MAP_ICONS[icon_name] = pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', os.path.join(map_icon_path, icon)
-    ))
-
-AMENITIES = {key: MAP_ICONS[value] for key, value in CONFIGFILE.items('MAPICONS')}
-
-
 pygame.font.init()
 FONTS = {}
 for x in range(10, 28):
