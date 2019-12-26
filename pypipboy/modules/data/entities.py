@@ -58,7 +58,7 @@ class Map(game.Entity):
                 image = config.AMENITIES[tag[3]]
             else:
                 print("Unknown amenity: {}".format(tag[3]))
-                image = config.MAP_ICONS['misc']
+                image = config.AMENITIES['default']
             pygame.transform.scale(image, (10, 10))
             self._map_surface.blit(image, (tag[1], tag[2]))
             text = config.FONTS[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
@@ -162,7 +162,7 @@ class MapGrid(game.Entity):
                 image = config.AMENITIES[self.tags[name][2]]
             else:
                 # print "Unknown amenity: %s" % self.tags[name][2]
-                image = config.MAP_ICONS['misc']
+                image = config.AMENITIES['default']
             pygame.transform.scale(image, (10, 10))
             self.image.blit(image, (self.tags[name][0], self.tags[name][1]))
             # try:

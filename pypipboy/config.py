@@ -1,3 +1,5 @@
+import os
+from configparser import ConfigParser
 import pkg_resources
 import pygame
 
@@ -7,8 +9,13 @@ try:
 except Exception:
     SOUND_ENABLED = False
 
-WIDTH = 480
-HEIGHT = 320
+
+CONFIGFILE = ConfigParser(allow_no_value=True)
+CONFIGFILE.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
+
+WIDTH = CONFIGFILE.getint('Display', 'width')
+HEIGHT = CONFIGFILE.getint('Display', 'height')
+
 
 MAP_FOCUS = (-102.3016145, 21.8841274)
 
@@ -33,10 +40,10 @@ ACTIONS = {
 try:
     import RPi.GPIO as GPIO
     GPIO.setmode(GPIO.BCM)
-    GPIO_AVAILABLE = True
 except ImportError:
-    print("GPIO UNAVAILABLE")
-    GPIO_AVAILABLE = False
+    pass
+
+GPIO_AVAILABLE = CONFIGFILE.getboolean('GPIO', 'enabled')
 
 # Using GPIO.BCM as mode
 GPIO_ACTIONS = {
@@ -53,70 +60,16 @@ GPIO_ACTIONS = {
 }
 
 
-MAP_ICONS = {
-    "camp": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/camp.png'
-    )),
-    "factory": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/factory.png'
-    )),
-    "metro": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/metro.png'
-    )),
-    "misc": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/misc.png'
-    )),
-    "monument": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/monument.png'
-    )),
-    "vault": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/vault.png'
-    )),
-    "settlement": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/settlement.png'
-    )),
-    "ruin": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/ruin.png'
-    )),
-    "cave": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/cave.png'
-    )),
-    "landmark": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/landmark.png'
-    )),
-    "city": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/city.png'
-    )),
-    "office": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/office.png'
-    )),
-    "sewer": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/sewer.png'
-    )),
-}
+MAP_ICONS = {}
+map_icon_path = 'data/images/map_icons'
+for icon in pkg_resources.resource_listdir('pypipboy', map_icon_path):
+    icon_name = icon.rsplit('.', 1)[0]
+    MAP_ICONS[icon_name] = pygame.image.load(pkg_resources.resource_filename(
+        'pypipboy', os.path.join(map_icon_path, icon)
+    ))
 
-AMENITIES = {
-    'pub': MAP_ICONS['vault'],
-    'nightclub': MAP_ICONS['vault'],
-    'bar': MAP_ICONS['vault'],
-    'fast_food': MAP_ICONS['sewer'],
-    'cafe': MAP_ICONS['sewer'],
-    'drinking_water': MAP_ICONS['sewer'],
-    'restaurant': MAP_ICONS['settlement'],
-    'cinema': MAP_ICONS['office'],
-    'pharmacy': MAP_ICONS['office'],
-    'school': MAP_ICONS['office'],
-    'bank': MAP_ICONS['monument'],
-    'townhall': MAP_ICONS['monument'],
-    'bicycle_parking': MAP_ICONS['misc'],
-    'place_of_worship': MAP_ICONS['misc'],
-    'theatre': MAP_ICONS['misc'],
-    'bus_station': MAP_ICONS['misc'],
-    'parking': MAP_ICONS['misc'],
-    'fountain': MAP_ICONS['misc'],
-    'marketplace': MAP_ICONS['misc'],
-    'atm': MAP_ICONS['misc'],
-}
+AMENITIES = {key: MAP_ICONS[value] for key, value in CONFIGFILE.items('MAPICONS')}
+
 
 pygame.font.init()
 FONTS = {}
