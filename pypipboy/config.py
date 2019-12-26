@@ -17,8 +17,6 @@ WIDTH = CONFIGFILE.getint('Display', 'width')
 HEIGHT = CONFIGFILE.getint('Display', 'height')
 
 
-MAP_FOCUS = (-102.3016145, 21.8841274)
-
 EVENTS = {
     'SONG_END': pygame.USEREVENT + 1
 }
