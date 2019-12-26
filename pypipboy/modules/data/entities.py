@@ -43,6 +43,12 @@ class Map(game.Entity):
     def move_map(self, x, y):
         self._render_rect.move_ip(x, y)
 
+    def get_map_icon(self, icon_name):
+        if icon_name in config.AMENITIES:
+            return config.AMENITIES[icon_name]
+        print("Unknown amenity: {}".format(icon_name))
+        return config.AMENITIES['default']
+
     def redraw_map(self, coef=1):
         self._map_surface.fill((0, 0, 0))
         for way in self._mapper.transpose_ways((self._size / coef, self._size / coef), (self._size / 2, self._size / 2)):
@@ -54,11 +60,7 @@ class Map(game.Entity):
                 2
             )
         for tag in self._mapper.transpose_tags((self._size / coef, self._size / coef), (self._size / 2, self._size / 2)):
-            if tag[3] in config.AMENITIES:
-                image = config.AMENITIES[tag[3]]
-            else:
-                print("Unknown amenity: {}".format(tag[3]))
-                image = config.AMENITIES['default']
+            image = self.get_map_icon(tag[3])
             pygame.transform.scale(image, (10, 10))
             self._map_surface.blit(image, (tag[1], tag[2]))
             text = config.FONTS[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
@@ -158,11 +160,7 @@ class MapGrid(game.Entity):
             self.tags.update(square.tags)
         self._tag_surface.fill((0, 0, 0))
         for name in self.tags:
-            if self.tags[name][2] in config.AMENITIES:
-                image = config.AMENITIES[self.tags[name][2]]
-            else:
-                # print "Unknown amenity: %s" % self.tags[name][2]
-                image = config.AMENITIES['default']
+            image = self.get_map_icon(self.tags[name][2])
             pygame.transform.scale(image, (10, 10))
             self.image.blit(image, (self.tags[name][0], self.tags[name][1]))
             # try:
