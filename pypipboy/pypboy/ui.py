@@ -9,8 +9,12 @@ from pypipboy import config
 
 class Header(game.Entity):
 
-    def __init__(self, headline="", title=""):
-        super(Header, self).__init__((config.WIDTH, config.HEIGHT))
+    def __init__(self, pipboy, headline="", title=""):
+        super(Header, self).__init__((
+            pipboy.display.width,
+            pipboy.display.height
+        ))
+        self.pipboy = pipboy
         self.headline = headline
         self.title = title
         self.rect[0] = 4
@@ -24,17 +28,17 @@ class Header(game.Entity):
         if new_date != self._date:
             self.image.fill((0, 0, 0))
             pygame.draw.line(self.image, (95, 255, 177), (5, 15), (5, 35), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (5, 15), (config.WIDTH - 154, 15), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 154, 15), (config.WIDTH - 154, 35), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 148, 15), (config.WIDTH - 13, 15), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 13, 15), (config.WIDTH - 13, 35), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (5, 15), (self.pipboy.display.width - 154, 15), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 154, 15), (self.pipboy.display.width - 154, 35), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 148, 15), (self.pipboy.display.width - 13, 15), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 13, 15), (self.pipboy.display.width - 13, 35), 2)
 
             text = config.FONTS[14].render("  %s  " % self.headline, True, (105, 251, 187), (0, 0, 0))
             self.image.blit(text, (26, 8))
             text = config.FONTS[14].render(self.title, True, (95, 255, 177), (0, 0, 0))
-            self.image.blit(text, ((config.WIDTH - 154) - text.get_width() - 10, 19))
+            self.image.blit(text, ((self.pipboy.display.width - 154) - text.get_width() - 10, 19))
             text = config.FONTS[14].render(self._date, True, (95, 255, 177), (0, 0, 0))
-            self.image.blit(text, ((config.WIDTH - 141), 19))
+            self.image.blit(text, ((self.pipboy.display.width - 141), 19))
             self._date = new_date
 
         super(Header, self).update(*args, **kwargs)
@@ -42,11 +46,12 @@ class Header(game.Entity):
 
 class Footer(game.Entity):
 
-    def __init__(self):
+    def __init__(self, pipboy):
         self.menu = []
-        super(Footer, self).__init__((config.WIDTH, config.HEIGHT))
+        self.pipboy = pipboy
+        super(Footer, self).__init__((self.pipboy.display.width, self.pipboy.display.height))
         self.rect[0] = 4
-        self.rect[1] = config.HEIGHT - 40
+        self.rect[1] = self.pipboy.display.height - 40
 
     def update(self, *args, **kwargs):
         super(Footer, self).update(*args, **kwargs)
@@ -56,8 +61,8 @@ class Footer(game.Entity):
         self.selected = module
         self.image.fill((0, 0, 0))
         pygame.draw.line(self.image, (95, 255, 177), (5, 2), (5, 20), 2)
-        pygame.draw.line(self.image, (95, 255, 177), (5, 20), (config.WIDTH - 13, 20), 2)
-        pygame.draw.line(self.image, (95, 255, 177), (config.WIDTH - 13, 2), (config.WIDTH - 13, 20), 2)
+        pygame.draw.line(self.image, (95, 255, 177), (5, 20), (self.pipboy.display.width - 13, 20), 2)
+        pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 13, 2), (self.pipboy.display.width - 13, 20), 2)
 
         offset = 20
         for m in self.menu:
@@ -79,7 +84,7 @@ class Footer(game.Entity):
 class Menu(game.Entity):
 
     def __init__(self, submodule, width=100, selected=0):
-        super(Menu, self).__init__((width, config.HEIGHT - 80))
+        super(Menu, self).__init__((width, submodule.parent.pypboy.display.height - 80))
         self.submodule = submodule
         self._items = defaultdict(list)
         self.selected = selected
@@ -175,22 +180,6 @@ class Scanlines(game.Entity):
             if (self.top * self.speed) >= self.move:
                 self.top = 0
         super(Scanlines, self).render(self, *args, **kwargs)
-
-
-class Overlay(game.Entity):
-    def __init__(self):
-        self.image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
-        super(Overlay, self).__init__((config.WIDTH, config.HEIGHT))
-        self.blit_alpha(self, self.image, (0, 0), 128)
-
-    def blit_alpha(self, target, source, location, opacity):
-        x = location[0]
-        y = location[1]
-        temp = pygame.Surface((source.get_width(), source.get_height())).convert()
-        temp.blit(target, (-x, -y))
-        temp.blit(source, (0, 0))
-        temp.set_alpha(opacity)
-        target.blit(temp, location)
 
 
 class Border(game.Entity):

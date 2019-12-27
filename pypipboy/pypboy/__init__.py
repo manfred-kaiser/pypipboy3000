@@ -27,13 +27,13 @@ class BaseModule(game.EntityGroup):
         self.configfile = configfile
         self.position = (0, 40)
 
-        self.footer = pypipboy.pypboy.ui.Footer()
+        self.footer = pypipboy.pypboy.ui.Footer(self.pypboy)
         self.footer.menu = []
         for mod in self.MODULES:
             self.submodules.append(mod(self, self.configfile))
             self.footer.menu.append(mod.LABEL)
         self.footer.selected = self.footer.menu[0]
-        self.footer.position = (0, config.HEIGHT - 53)  # 80
+        self.footer.position = (0, self.pypboy.display.height - 53)  # 80
         self.add(self.footer)
 
         self.switch_submodule(0)

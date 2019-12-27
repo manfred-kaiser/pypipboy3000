@@ -1,7 +1,7 @@
-import os
 from configparser import ConfigParser
 import pkg_resources
 import pygame
+
 
 try:
     pygame.mixer.init(44100, -16, 2, 2048)
@@ -12,9 +12,6 @@ except Exception:
 
 CONFIGFILE = ConfigParser(allow_no_value=True)
 CONFIGFILE.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
-
-WIDTH = CONFIGFILE.getint('Display', 'width')
-HEIGHT = CONFIGFILE.getint('Display', 'height')
 
 
 EVENTS = {

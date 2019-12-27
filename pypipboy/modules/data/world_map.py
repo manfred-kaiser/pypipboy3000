@@ -12,8 +12,7 @@ class Module(pypboy.SubModule):
 
     def __init__(self, *args, **kwargs):
         super(Module, self).__init__(*args, **kwargs)
-        # mapgrid = entities.MapGrid((-5.9302032, 54.5966701), (config.WIDTH - 8, config.HEIGHT - 80))
-        mapgrid = entities.Map(480, pygame.Rect(0, 0, config.WIDTH - 8, config.HEIGHT - 80))
+        mapgrid = entities.Map(480, pygame.Rect(0, 0, self.parent.pypboy.display.width - 8, self.parent.pypboy.display.height - 80))
         mapgrid.fetch_map(
             (
                 CONFIGFILE.getfloat('MAP', 'longitude'),

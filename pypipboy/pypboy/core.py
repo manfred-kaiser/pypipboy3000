@@ -13,16 +13,29 @@ from pypipboy import game
 from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 
+class PypboyDisplay():
+
+    def __init__(self, configfile):
+        self.configfile = configfile
+        self.width = self.configfile.getint('Display', 'width')
+        self.height = self.configfile.getint('Display', 'height')
+
+
 class Pypboy(game.core.Engine):
 
     def __init__(self, pipboy_name):
-        super(Pypboy, self).__init__(pipboy_name, config.WIDTH, config.HEIGHT)
-
         self.configfile = ConfigParser(allow_no_value=True)
         self.configfile.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
+        self.display = PypboyDisplay(self.configfile)
+
+        super(Pypboy, self).__init__(
+            pipboy_name,
+            self.display.width,
+            self.display.height
+        )
 
         self.active = None
-        self.header = Header()
+        self.header = Header(self)
         self.border = Border()
         self.scanlines = [
             Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)]),
