@@ -15,7 +15,7 @@ class BaseModule(game.EntityGroup):
 
     MODULES = []
 
-    def __init__(self, boy, *args, **kwargs):
+    def __init__(self, boy, configfile=None, *args, **kwargs):
         super(BaseModule, self).__init__()
         self.submodules = []
         if config.GPIO_AVAILABLE:
@@ -24,12 +24,13 @@ class BaseModule(game.EntityGroup):
 
         self.active = None
         self.pypboy = boy
+        self.configfile = configfile
         self.position = (0, 40)
 
         self.footer = pypipboy.pypboy.ui.Footer()
         self.footer.menu = []
         for mod in self.MODULES:
-            self.submodules.append(mod(self))
+            self.submodules.append(mod(self, self.configfile))
             self.footer.menu.append(mod.LABEL)
         self.footer.selected = self.footer.menu[0]
         self.footer.position = (0, config.HEIGHT - 53)  # 80
@@ -100,9 +101,10 @@ class SubModule(game.EntityGroup):
     headline = None
     title = None
 
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, configfile=None, *args, **kwargs):
         super(SubModule, self).__init__()
         self.parent = parent
+        self.configfile = configfile
         self.menu = Menu(self)
         self.add(self.menu)
 

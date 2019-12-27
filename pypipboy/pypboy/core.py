@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 import pkg_resources
 import pygame
 
@@ -17,6 +18,9 @@ class Pypboy(game.core.Engine):
     def __init__(self, pipboy_name):
         super(Pypboy, self).__init__(pipboy_name, config.WIDTH, config.HEIGHT)
 
+        self.configfile = ConfigParser(allow_no_value=True)
+        self.configfile.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
+
         self.active = None
         self.header = Header()
         self.border = Border()
@@ -30,7 +34,7 @@ class Pypboy(game.core.Engine):
         self.gpio_actions = {}
 
     def add_module(self, module_name, module_cls):
-        self.modules[module_name] = module_cls(self)
+        self.modules[module_name] = module_cls(self, self.configfile)
 
     def _init_modules(self):
         self.root_children.add(self.header)
