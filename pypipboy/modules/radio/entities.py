@@ -17,6 +17,7 @@ class RadioStation(game.Entity):
 
     def __init__(self, *args, **kwargs):
         super(RadioStation, self).__init__((10, 10), *args, **kwargs)
+        self.directory = None
         self.state = self.STATES['stopped']
         self.files = self.load_files()
         pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
@@ -45,10 +46,9 @@ class RadioStation(game.Entity):
 
     def load_files(self):
         files = []
-        for f in os.listdir(self.directory):
+        for f in os.listdir(self.directory) if self.directory else []:
             if f.endswith(".mp3") or f.endswith(".ogg") or f.endswith(".wav"):
                 files.append(self.directory + f)
-        # print files
         return files
 
 
