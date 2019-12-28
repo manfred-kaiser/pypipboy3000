@@ -1,7 +1,7 @@
 from pypipboy.pypboy import BaseModule
 from pypipboy.modules.data import quests
 from pypipboy.modules.data import misc
-from pypipboy.modules.data import radio
+from pypipboy.modules.radio import RadioModule
 
 from pypipboy.modules.map import WorldMapModule, LocalMapModule
 
@@ -15,5 +15,5 @@ class Module(BaseModule):
         WorldMapModule,
         quests.Module,
         misc.Module,
-        radio.Module
+        RadioModule
     ]

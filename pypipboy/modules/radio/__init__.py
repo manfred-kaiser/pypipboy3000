@@ -1,15 +1,15 @@
 from pypipboy import pypboy
 from pypipboy import config
 
-from pypipboy.modules.data import entities
+from pypipboy.modules.radio import entities
 
 
-class Module(pypboy.SubModule):
+class RadioModule(pypboy.SubModule):
 
     LABEL = "Radio"
 
     def __init__(self, *args, **kwargs):
-        super(Module, self).__init__(*args, **kwargs)
+        super(RadioModule, self).__init__(*args, **kwargs)
         self.stations = [
             entities.GalaxyNewsRadio()
         ]
