@@ -23,6 +23,8 @@ class RadioStation(game.Entity):
         pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
 
     def play_random(self):
+        if not self.files:
+            return
         f = choice(self.files)
         self.filename = f
         pygame.mixer.music.load(f)
