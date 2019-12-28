@@ -141,7 +141,7 @@ class MenuItem():
     def on_select(self):
         self.execute()
         if self.callback:
-            self.callback()
+            self.callback(self)
 
     def execute(self):
         pass

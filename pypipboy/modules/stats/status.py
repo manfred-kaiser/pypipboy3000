@@ -18,8 +18,8 @@ class Module(pypboy.SubModule):
         self.menu.add_item(MenuItem("CND", self.call_test))
         self.menu.add_item(MenuItem("RAD"))
 
-    def call_test(self):
-        print("OK")
+    def call_test(self, menuitem):
+        print(menuitem)
 
 
 class Health(game.Entity):
