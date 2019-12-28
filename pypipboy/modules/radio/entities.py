@@ -1,4 +1,3 @@
-import pkg_resources
 import os
 from pypipboy import game
 from pypipboy import config
@@ -15,12 +14,21 @@ class RadioStation(game.Entity):
         'paused': 2
     }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, configfile, section, *args, **kwargs):
         super(RadioStation, self).__init__((10, 10), *args, **kwargs)
-        self.directory = None
+        self.configfile = configfile
+        self.section = section
         self.state = self.STATES['stopped']
         self.files = self.load_files()
         pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
+
+    @property
+    def directory(self):
+        return self.configfile.get(self.section, 'directory')
+
+    @property
+    def name(self):
+        return self.configfile.get(self.section, 'name')
 
     def play_random(self):
         if not self.files:
@@ -50,12 +58,5 @@ class RadioStation(game.Entity):
         files = []
         for f in os.listdir(self.directory) if self.directory else []:
             if f.endswith(".mp3") or f.endswith(".ogg") or f.endswith(".wav"):
-                files.append(self.directory + f)
+                files.append(os.path.join(self.directory, f))
         return files
-
-
-class GalaxyNewsRadio(RadioStation):
-
-    def __init__(self, *args, **kwargs):
-        self.directory = pkg_resources.resource_filename('pypipboy', 'data/sounds/radio/gnr/')
-        super(GalaxyNewsRadio, self).__init__(self, *args, **kwargs)
