@@ -1,7 +1,7 @@
 import pygame
 from pypipboy import pypboy
 
-from pypipboy.modules.data import entities
+from pypipboy.modules.map.entities import Map
 
 
 class MapModule(pypboy.SubModule):
@@ -17,7 +17,7 @@ class MapModule(pypboy.SubModule):
         if self.MAPNAME is None:
             raise NotImplementedError('Map need MAPNAME')
 
-        mapgrid = entities.Map(self.parent.pypboy, self.parent.pypboy.display.width, pygame.Rect(4, (self.parent.pypboy.display.width - self.parent.pypboy.display.height) / 2, self.parent.pypboy.display.width - 8, self.parent.pypboy.display.height - 80))
+        mapgrid = Map(self.parent.pypboy, self.parent.pypboy.display.width, pygame.Rect(4, (self.parent.pypboy.display.width - self.parent.pypboy.display.height) / 2, self.parent.pypboy.display.width - 8, self.parent.pypboy.display.height - 80))
         mapgrid.fetch_map(
             (
                 self.parent.pypboy.configfile.getfloat('MAP', 'longitude'),
