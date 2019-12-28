@@ -10,10 +10,6 @@ except Exception:
     SOUND_ENABLED = False
 
 
-CONFIGFILE = ConfigParser(allow_no_value=True)
-CONFIGFILE.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
-
-
 EVENTS = {
     'SONG_END': pygame.USEREVENT + 1
 }

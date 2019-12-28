@@ -2,7 +2,6 @@ import pkg_resources
 import os
 from pypipboy import game
 from pypipboy import config
-from pypipboy.config import CONFIGFILE
 import pygame
 import threading
 import pypipboy.pypboy.data
@@ -25,15 +24,15 @@ class Map(game.Entity):
     MAP_ICONS = {}
     AMENITIES = {}
 
-    def __init__(self, width, render_rect=None, *args, **kwargs):
-
+    def __init__(self, pypboy, width, render_rect=None, *args, **kwargs):
+        self.pypboy = pypboy
         self.MAP_ICONS = {}
         for icon in pkg_resources.resource_listdir('pypipboy', self._map_icon_path):
             icon_name = icon.rsplit('.', 1)[0]
             self.MAP_ICONS[icon_name] = pygame.image.load(pkg_resources.resource_filename(
                 'pypipboy', os.path.join(self._map_icon_path, icon)
             ))
-        self.AMENITIES = {key: self.MAP_ICONS[value] for key, value in CONFIGFILE.items('MAPICONS')}
+        self.AMENITIES = {key: self.MAP_ICONS[value] for key, value in self.pypboy.configfile.items('MAPICONS')}
 
         self._mapper = pypipboy.pypboy.data.Maps()
         self._size = width
