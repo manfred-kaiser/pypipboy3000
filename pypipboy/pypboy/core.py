@@ -59,7 +59,7 @@ class Pypboy(game.core.Engine):
             module.move(4, 40)
 
     def _init_gpio_controls(self):
-        if not config.GPIO_AVAILABLE:
+        if not self.configfile.getboolean('GPIO', 'enabled'):
             return
         for pin in config.GPIO_ACTIONS.keys():
             print("Intialising pin {} as action '{}'".format(pin, config.GPIO_ACTIONS[pin]))

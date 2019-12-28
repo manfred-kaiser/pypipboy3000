@@ -17,13 +17,13 @@ class BaseModule(game.EntityGroup):
 
     def __init__(self, boy, configfile=None, *args, **kwargs):
         super(BaseModule, self).__init__()
+        self.pypboy = boy
         self.submodules = []
-        if config.GPIO_AVAILABLE:
+        if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.setup(self.GPIO_LED_ID, GPIO.OUT)
             GPIO.output(self.GPIO_LED_ID, False)
 
         self.active = None
-        self.pypboy = boy
         self.configfile = configfile
         self.position = (0, 40)
 
@@ -83,12 +83,12 @@ class BaseModule(game.EntityGroup):
 
     def handle_pause(self):
         self.paused = True
-        if config.GPIO_AVAILABLE:
+        if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.output(self.GPIO_LED_ID, False)
 
     def handle_resume(self):
         self.paused = False
-        if config.GPIO_AVAILABLE:
+        if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.output(self.GPIO_LED_ID, True)
         if config.SOUND_ENABLED:
             self.module_change_sfx.play()

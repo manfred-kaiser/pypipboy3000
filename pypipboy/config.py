@@ -38,7 +38,6 @@ try:
 except ImportError:
     pass
 
-GPIO_AVAILABLE = CONFIGFILE.getboolean('GPIO', 'enabled')
 
 # Using GPIO.BCM as mode
 GPIO_ACTIONS = {
