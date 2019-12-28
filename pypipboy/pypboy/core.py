@@ -1,3 +1,5 @@
+import logging
+import os
 from configparser import ConfigParser
 import pkg_resources
 import pygame
@@ -23,9 +25,14 @@ class PypboyDisplay():
 
 class Pypboy(game.core.Engine):
 
-    def __init__(self, pipboy_name):
+    def __init__(self, pipboy_name, configfile=None):
         self.configfile = ConfigParser(allow_no_value=True)
         self.configfile.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
+        if configfile:
+            if os.path.isfile(configfile):
+                self.configfile.read(configfile)
+            else:
+                logging.error("configfile '%s' not found!", configfile)
         self.display = PypboyDisplay(self.configfile)
 
         super(Pypboy, self).__init__(
