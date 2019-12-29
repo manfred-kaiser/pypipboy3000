@@ -91,13 +91,6 @@ class Menu(Entity):
         self.selected = selected
         self.rect[0] = 4
         self.rect[1] = 60
-        if config.SOUND_ENABLED:
-            self.dial_move_sfx = pygame.mixer.Sound(
-                pkg_resources.resource_filename(
-                    'pypipboy',
-                    'data/sounds/dial_move.ogg'
-                )
-            )
 
     @property
     def items(self):
@@ -117,13 +110,11 @@ class Menu(Entity):
             return
         if action == "dial_up":
             if self.selected > 0:
-                if config.SOUND_ENABLED:
-                    self.dial_move_sfx.play()
+                self.submodule.parent.pypboy.sounds.play('dial_move')
                 self.select(self.selected - 1)
         if action == "dial_down":
             if self.selected < len(self.items) - 1:
-                if config.SOUND_ENABLED:
-                    self.dial_move_sfx.play()
+                self.submodule.parent.pypboy.sounds.play('dial_move')
                 self.select(self.selected + 1)
 
     def redraw(self):

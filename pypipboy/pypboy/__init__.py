@@ -43,8 +43,6 @@ class BaseModule(EntityGroup):
             "pause": self.handle_pause,
             "resume": self.handle_resume
         }
-        if config.SOUND_ENABLED:
-            self.module_change_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/module_change.ogg'))
 
     def move(self, x, y):
         super(BaseModule, self).move(x, y)
@@ -91,8 +89,7 @@ class BaseModule(EntityGroup):
         self.paused = False
         if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.output(self.GPIO_LED_ID, True)
-        if config.SOUND_ENABLED:
-            self.module_change_sfx.play()
+        self.pypboy.sounds.play('module_change')
         self.active.handle_action("resume")
 
 
@@ -115,14 +112,6 @@ class SubModule(EntityGroup):
             "resume": self.handle_resume
         }
 
-        if config.SOUND_ENABLED:
-            self.submodule_change_sfx = pygame.mixer.Sound(
-                pkg_resources.resource_filename(
-                    'pypipboy',
-                    'data/sounds/submodule_change.ogg'
-                )
-            )
-
     def handle_action(self, action, value=0):
         if action.startswith("dial_") and self.menu:
             self.menu.handle_action(action)
@@ -138,5 +127,4 @@ class SubModule(EntityGroup):
     def handle_resume(self):
         self.parent.pypboy.set_title(self.headline, self.title)
         self.paused = False
-        if config.SOUND_ENABLED:
-            self.submodule_change_sfx.play()
+        self.parent.pypboy.sounds.play('submodule_change')

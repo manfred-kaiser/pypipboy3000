@@ -1,12 +1,6 @@
+import os
 import pkg_resources
 import pygame
-
-
-try:
-    pygame.mixer.init(44100, -16, 2, 2048)
-    SOUND_ENABLED = True
-except Exception:
-    SOUND_ENABLED = False
 
 
 ACTIONS = {
@@ -43,6 +37,30 @@ GPIO_ACTIONS = {
     #    31: "dial_up", # GPIO 23
     27: "dial_down"  # GPIO 7
 }
+
+
+class SoundManager():
+
+    def __init__(self, configfile):
+        self.configfile = configfile
+        self._sound_enabled = True
+        try:
+            pygame.mixer.init(44100, -16, 2, 2048)
+            self._sounds = self._get_soundfiles()
+        except Exception:
+            self._sound_enabled = False
+
+    def _get_soundfiles(self):
+        soundfiles = {}
+        for soundname, soundfile in self.configfile.items('SOUND:FILES'):
+            if not os.path.isfile(soundfile):
+                soundfile = pkg_resources.resource_filename('pypipboy', soundfile)
+            soundfiles[soundname] = pygame.mixer.Sound(soundfile)
+        return soundfiles
+
+    def play(self, sound_name):
+        if self._sound_enabled and sound_name in self._sounds:
+            self._sounds[sound_name].play()
 
 
 class FontManager():

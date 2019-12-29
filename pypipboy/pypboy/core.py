@@ -10,7 +10,7 @@ except ImportError:
     pass
 
 from pypipboy import config
-from pypipboy.config import FontManager
+from pypipboy.config import FontManager, SoundManager
 from pypipboy.game.core import Engine
 
 from pypipboy.pypboy.ui import Header, Border, Scanlines
@@ -36,6 +36,7 @@ class Pypboy(Engine):
                 logging.error("configfile '%s' not found!", configfile)
 
         self.fonts = FontManager()
+        self.sounds = SoundManager(self.configfile)
         self.events = {}
         self.display = PypboyDisplay(self.configfile)
         self.running = False
