@@ -14,13 +14,13 @@ class RadioStation(game.Entity):
         'paused': 2
     }
 
-    def __init__(self, configfile, section, *args, **kwargs):
+    def __init__(self, configfile, section, event, *args, **kwargs):
         super(RadioStation, self).__init__((10, 10), *args, **kwargs)
         self.configfile = configfile
         self.section = section
         self.state = self.STATES['stopped']
         self.files = self.load_files()
-        pygame.mixer.music.set_endevent(config.EVENTS['SONG_END'])
+        pygame.mixer.music.set_endevent(event)
 
     @property
     def directory(self):

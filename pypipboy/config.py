@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 import pkg_resources
 import pygame
 
@@ -9,10 +8,6 @@ try:
 except Exception:
     SOUND_ENABLED = False
 
-
-EVENTS = {
-    'SONG_END': pygame.USEREVENT + 1
-}
 
 ACTIONS = {
     pygame.K_F1: "module_stats",
@@ -56,5 +51,3 @@ for x in range(10, 28):
     FONTS[x] = pygame.font.Font(pkg_resources.resource_filename(
         'pypipboy', 'data/monofonto.ttf'
     ), x)
-
-radio = None

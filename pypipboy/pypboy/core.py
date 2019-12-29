@@ -33,6 +33,8 @@ class Pypboy(game.core.Engine):
                 self.configfile.read(configfile)
             else:
                 logging.error("configfile '%s' not found!", configfile)
+
+        self.events = {}
         self.display = PypboyDisplay(self.configfile)
 
         super(Pypboy, self).__init__(
@@ -55,6 +57,9 @@ class Pypboy(game.core.Engine):
 
     def add_module(self, module_name, module_cls):
         self.modules[module_name] = module_cls(self, self.configfile)
+
+    def register_event(self, event, callback):
+        self.events[event] = callback
 
     def _init_modules(self):
         self.root_children.add(self.header)
@@ -121,9 +126,8 @@ class Pypboy(game.core.Engine):
                     self.handle_action(config.ACTIONS[event.key])
         elif event.type == pygame.QUIT:
             self.running = False
-        elif event.type == config.EVENTS['SONG_END']:
-            if config.radio:
-                config.radio.handle_event(event)
+        elif event.type in self.events:
+            self.events[event.type](event)
         else:
             if self.active:
                 self.active.handle_event(event)
