@@ -36,6 +36,7 @@ class Pypboy(game.core.Engine):
 
         self.events = {}
         self.display = PypboyDisplay(self.configfile)
+        self.running = False
 
         super(Pypboy, self).__init__(
             pipboy_name,
@@ -73,15 +74,15 @@ class Pypboy(game.core.Engine):
     def _init_gpio_controls(self):
         if not self.configfile.getboolean('GPIO', 'enabled'):
             return
-        for pin in config.GPIO_ACTIONS.keys():
-            print("Intialising pin {} as action '{}'".format(pin, config.GPIO_ACTIONS[pin]))
+        for pin, action in config.GPIO_ACTIONS.items():
+            print("Intialising pin {} as action '{}'".format(pin, action))
             GPIO.setup(pin, GPIO.IN)
-            self.gpio_actions[pin] = config.GPIO_ACTIONS[pin]
+            self.gpio_actions[pin] = action
 
     def check_gpio_input(self):
-        for pin in self.gpio_actions.keys():
+        for pin, action in self.gpio_actions.items():
             if not GPIO.input(pin):
-                self.handle_action(self.gpio_actions[pin])
+                self.handle_action(action)
 
     def set_title(self, headline, title):
         self.header.headline = headline
@@ -107,7 +108,6 @@ class Pypboy(game.core.Engine):
             self.active.handle_action("resume")
             self.add(self.active)
         else:
-            pass
             print("Module '{}' not implemented.".format(module))
 
     def handle_action(self, action):
@@ -119,7 +119,7 @@ class Pypboy(game.core.Engine):
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
-            if (event.key == pygame.K_ESCAPE):
+            if event.key == pygame.K_ESCAPE:
                 self.running = False
             else:
                 if event.key in config.ACTIONS:

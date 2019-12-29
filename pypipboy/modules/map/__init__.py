@@ -12,12 +12,20 @@ class MapModule(pypboy.SubModule):
 
     MAPNAME = None
 
-    def __init__(self, *args, **kwargs):
-        super(MapModule, self).__init__(*args, **kwargs)
+    def __init__(self, parent, configfile=None):
+        super(MapModule, self).__init__(parent, configfile)
         if self.MAPNAME is None:
             raise NotImplementedError('Map need MAPNAME')
 
-        mapgrid = Map(self.parent.pypboy, self.parent.pypboy.display.width, pygame.Rect(4, (self.parent.pypboy.display.width - self.parent.pypboy.display.height) / 2, self.parent.pypboy.display.width - 8, self.parent.pypboy.display.height - 80))
+        mapgrid = Map(
+            self.parent.pypboy,
+            self.parent.pypboy.display.width,
+            pygame.Rect(
+                4,
+                (self.parent.pypboy.display.width - self.parent.pypboy.display.height) / 2,
+                self.parent.pypboy.display.width - 8, self.parent.pypboy.display.height - 80
+            )
+        )
         mapgrid.fetch_map(
             (
                 self.parent.pypboy.configfile.getfloat('MAP', 'longitude'),

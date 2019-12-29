@@ -15,8 +15,9 @@ class BaseModule(game.EntityGroup):
 
     MODULES = []
 
-    def __init__(self, boy, configfile=None, *args, **kwargs):
+    def __init__(self, boy, configfile=None):
         super(BaseModule, self).__init__()
+        self.paused = False
         self.pypboy = boy
         self.submodules = []
         if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
@@ -101,10 +102,11 @@ class SubModule(game.EntityGroup):
     headline = None
     title = None
 
-    def __init__(self, parent, configfile=None, *args, **kwargs):
+    def __init__(self, parent, configfile=None):
         super(SubModule, self).__init__()
         self.parent = parent
         self.configfile = configfile
+        self.paused = False
         self.menu = Menu(self)
         self.add(self.menu)
 
@@ -114,7 +116,12 @@ class SubModule(game.EntityGroup):
         }
 
         if config.SOUND_ENABLED:
-            self.submodule_change_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/submodule_change.ogg'))
+            self.submodule_change_sfx = pygame.mixer.Sound(
+                pkg_resources.resource_filename(
+                    'pypipboy',
+                    'data/sounds/submodule_change.ogg'
+                )
+            )
 
     def handle_action(self, action, value=0):
         if action.startswith("dial_") and self.menu:

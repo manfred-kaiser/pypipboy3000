@@ -1,8 +1,8 @@
 import pkg_resources
-from pypipboy import pypboy
 import pygame
-from pypipboy import game
 
+from pypipboy import pypboy
+from pypipboy import game
 from pypipboy.pypboy.ui import MenuItem
 
 
@@ -12,8 +12,8 @@ class Module(pypboy.SubModule):
     headline = "STATUS"
     title = " HP 160/175  |  AP 62/62"
 
-    def __init__(self, *args, **kwargs):
-        super(Module, self).__init__(*args, **kwargs)
+    def __init__(self, parent, configfile=None):
+        super(Module, self).__init__(parent, configfile)
         self.add(Health())
         self.menu.add_item(MenuItem("CND", self.call_test))
         self.menu.add_item(MenuItem("RAD"))

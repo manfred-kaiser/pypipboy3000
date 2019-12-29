@@ -1,7 +1,8 @@
-import pkg_resources
 import datetime
-import pygame
 from collections import defaultdict
+
+import pkg_resources
+import pygame
 
 from pypipboy import game
 from pypipboy import config
@@ -20,10 +21,7 @@ class Header(game.Entity):
         self.rect[0] = 4
         self._date = None
 
-    def update(self, *args, **kwargs):
-        super(Header, self).update(*args, **kwargs)
-
-    def render(self, *args, **kwargs):
+    def render(self, interval=0):
         new_date = datetime.datetime.now().strftime("%d.%m.%y.%H:%M:%S")
         if new_date != self._date:
             self.image.fill((0, 0, 0))
@@ -41,7 +39,7 @@ class Header(game.Entity):
             self.image.blit(text, ((self.pipboy.display.width - 141), 19))
             self._date = new_date
 
-        super(Header, self).update(*args, **kwargs)
+        super(Header, self).update()
 
 
 class Footer(game.Entity):
@@ -49,12 +47,10 @@ class Footer(game.Entity):
     def __init__(self, pipboy):
         self.menu = []
         self.pipboy = pipboy
+        self.selected = None
         super(Footer, self).__init__((self.pipboy.display.width, self.pipboy.display.height))
         self.rect[0] = 4
         self.rect[1] = self.pipboy.display.height - 40
-
-    def update(self, *args, **kwargs):
-        super(Footer, self).update(*args, **kwargs)
 
     def select(self, module):
         # self.dirty = 1
@@ -75,7 +71,12 @@ class Footer(game.Entity):
                 padding += 1
             # print(m+" : "+str(text.get_size()))
             if m == self.selected:
-                pygame.draw.rect(self.image, (95, 255, 177), (offset - 2, 6, (text_width + 3), 26), 2)
+                pygame.draw.rect(
+                    self.image,
+                    (95, 255, 177),
+                    (offset - 2, 6, (text_width + 3), 26),
+                    2
+                )
             self.image.blit(text, (offset, 12))
 
             offset = offset + 120 + (text_width - 100)
@@ -91,7 +92,12 @@ class Menu(game.Entity):
         self.rect[0] = 4
         self.rect[1] = 60
         if config.SOUND_ENABLED:
-            self.dial_move_sfx = pygame.mixer.Sound(pkg_resources.resource_filename('pypipboy', 'data/sounds/dial_move.ogg'))
+            self.dial_move_sfx = pygame.mixer.Sound(
+                pkg_resources.resource_filename(
+                    'pypipboy',
+                    'data/sounds/dial_move.ogg'
+                )
+            )
 
     @property
     def items(self):
@@ -124,7 +130,12 @@ class Menu(game.Entity):
         self.image.fill((0, 0, 0))
         offset = 5
         for i in range(len(self.items)):
-            text = config.FONTS[14].render(" %s " % self.items[i].title, True, (105, 255, 187), (0, 0, 0))
+            text = config.FONTS[14].render(
+                " %s " % self.items[i].title,
+                True,
+                (105, 255, 187),
+                (0, 0, 0)
+            )
             if i == self.selected:
                 selected_rect = (5, offset - 2, text.get_size()[0] + 6, text.get_size()[1] + 3)
                 pygame.draw.rect(self.image, (95, 255, 177), selected_rect, 2)
@@ -169,7 +180,7 @@ class Scanlines(game.Entity):
             if colour >= len(self.colours):
                 colour = 0
 
-    def render(self, interval, *args, **kwargs):
+    def render(self, interval=0):
         self.top += self.speed * interval
         self.rect[1] = self.top
         self.dirty = 1
@@ -179,11 +190,16 @@ class Scanlines(game.Entity):
         else:
             if (self.top * self.speed) >= self.move:
                 self.top = 0
-        super(Scanlines, self).render(self, *args, **kwargs)
+        super(Scanlines, self).render(self)
 
 
 class Border(game.Entity):
     def __init__(self):
         super(Border, self).__init__()
-        self.image = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/border.png'))
+        self.image = pygame.image.load(
+            pkg_resources.resource_filename(
+                'pypipboy',
+                'data/images/border.png'
+            )
+        )
         self.rect = self.image.get_rect()

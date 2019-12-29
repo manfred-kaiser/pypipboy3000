@@ -1,9 +1,7 @@
 import os
-from pypipboy import game
-from pypipboy import config
-import pygame
-
 from random import choice
+import pygame
+from pypipboy import game
 
 
 class RadioStation(game.Entity):
@@ -14,8 +12,8 @@ class RadioStation(game.Entity):
         'paused': 2
     }
 
-    def __init__(self, configfile, section, event, *args, **kwargs):
-        super(RadioStation, self).__init__((10, 10), *args, **kwargs)
+    def __init__(self, configfile, section, event):
+        super(RadioStation, self).__init__((10, 10))
         self.configfile = configfile
         self.section = section
         self.state = self.STATES['stopped']
@@ -33,9 +31,8 @@ class RadioStation(game.Entity):
     def play_random(self):
         if not self.files:
             return
-        f = choice(self.files)
-        self.filename = f
-        pygame.mixer.music.load(f)
+        filename = choice(self.files)  # nosec
+        pygame.mixer.music.load(filename)
         pygame.mixer.music.play()
         self.state = self.STATES['playing']
 

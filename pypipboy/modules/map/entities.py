@@ -1,9 +1,9 @@
-import pkg_resources
 import os
+import threading
+import pkg_resources
+import pygame
 from pypipboy import game
 from pypipboy import config
-import pygame
-import threading
 import pypipboy.pypboy.data
 
 
@@ -22,7 +22,7 @@ class Map(game.Entity):
     MAP_ICONS = {}
     AMENITIES = {}
 
-    def __init__(self, pypboy, width, render_rect=None, *args, **kwargs):
+    def __init__(self, pypboy, width, render_rect=None):
         self.pypboy = pypboy
         self.MAP_ICONS = {}
         for icon in pkg_resources.resource_listdir('pypipboy', self._map_icon_path):
@@ -30,13 +30,17 @@ class Map(game.Entity):
             self.MAP_ICONS[icon_name] = pygame.image.load(pkg_resources.resource_filename(
                 'pypipboy', os.path.join(self._map_icon_path, icon)
             ))
-        self.AMENITIES = {key: self.MAP_ICONS[value] for key, value in self.pypboy.configfile.items('MAPICONS')}
+        self.AMENITIES = {
+            key: self.MAP_ICONS[value]
+            for key, value
+            in self.pypboy.configfile.items('MAPICONS')
+        }
 
         self._mapper = pypipboy.pypboy.data.Maps()
         self._size = width
         self._map_surface = pygame.Surface((width, width))
         self._render_rect = render_rect
-        super(Map, self).__init__((width, width), *args, **kwargs)
+        super(Map, self).__init__((width, width))
         text = config.FONTS[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
         self.image.blit(text, (10, 10))
 
@@ -47,9 +51,6 @@ class Map(game.Entity):
     def _internal_fetch_map(self, position, radius):
         self._mapper.fetch_by_coordinate(position, radius)
         self.redraw_map()
-
-    def update(self, *args, **kwargs):
-        super(Map, self).update(*args, **kwargs)
 
     def move_map(self, x, y):
         self._render_rect.move_ip(x, y)
@@ -87,14 +88,15 @@ class MapSquare(game.Entity):
     _map_surface = None
     map_position = (0, 0)
 
-    def __init__(self, size, map_position, parent, *args, **kwargs):
+    def __init__(self, size, map_position, parent):
         self._mapper = pypipboy.pypboy.data.Maps()
         self._size = size
         self.parent = parent
         self._map_surface = pygame.Surface((size * 2, size * 2))
         self.map_position = map_position
         self.tags = {}
-        super(MapSquare, self).__init__((size, size), *args, **kwargs)
+        self.position = None
+        super(MapSquare, self).__init__((size, size))
 
     def fetch_map(self):
         self._fetching = threading.Thread(target=self._internal_fetch_map)
@@ -127,28 +129,14 @@ class MapGrid(game.Entity):
     _delta = 0.002
     _starting_position = (0, 0)
 
-    def __init__(self, starting_position, dimensions, *args, **kwargs):
+    def __init__(self, starting_position, dimensions):
         self._grid = []
         self._starting_position = starting_position
         self.dimensions = dimensions
         self._tag_surface = pygame.Surface(dimensions)
-        super(MapGrid, self).__init__(dimensions, *args, **kwargs)
+        super(MapGrid, self).__init__(dimensions)
         self.tags = {}
         self.fetch_outwards()
-
-    def test_fetch(self):
-        for x in range(10):
-            for y in range(5):
-                square = MapSquare(
-                    100,
-                    (
-                        self._starting_position[0] + (self._delta * x),
-                        self._starting_position[1] - (self._delta * y)
-                    )
-                )
-                square.fetch_map()
-                square.position = (100 * x, 100 * y)
-                self._grid.append(square)
 
     def fetch_outwards(self):
         for x in range(-4, 4):
@@ -162,7 +150,10 @@ class MapGrid(game.Entity):
                     self
                 )
                 square.fetch_map()
-                square.position = ((86 * x) + (self.dimensions[0] / 2) - 43, (86 * y) + (self.dimensions[1] / 2) - 43)
+                square.position = (
+                    (86 * x) + (self.dimensions[0] / 2) - 43,
+                    (86 * y) + (self.dimensions[1] / 2) - 43
+                )
                 self._grid.append(square)
 
     def draw_tags(self):
@@ -194,7 +185,7 @@ class MapGrid(game.Entity):
             #     print(e)
             #     pass
 
-    def redraw_map(self, *args, **kwargs):
+    def redraw_map(self):
         self.image.fill((0, 0, 0))
         for square in self._grid:
             self.image.blit(square._map_surface, square.position)

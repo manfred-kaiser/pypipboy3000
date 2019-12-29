@@ -1,9 +1,9 @@
-import xmltodict
-import requests
-import numpy
-from numpy.fft import fft
 from math import log10
 import math
+import requests
+import xmltodict
+import numpy
+from numpy.fft import fft
 import pygame
 
 
@@ -18,9 +18,6 @@ class Maps(object):
 
     SIG_PLACES = 3
     GRID_SIZE = 0.001
-
-    def __init__(self, *args, **kwargs):
-        super(Maps, self).__init__(*args, **kwargs)
 
     def float_floor_to_precision(self, value, precision):
         for _ in range(precision):
@@ -76,7 +73,12 @@ class Maps(object):
                                 for tag2 in node['tag']:
                                     if tag2["@k"] == "amenity":
                                         amenity = tag2["@v"]
-                                self.tags.append((float(node['@lat']), float(node['@lon']), tag["@v"], amenity))
+                                self.tags.append((
+                                    float(node['@lat']),
+                                    float(node['@lon']),
+                                    tag["@v"],
+                                    amenity
+                                ))
                             # Personal Addresses - Removed
                             # if tag["@k"] == "addr:housenumber":
                             #       for t2 in node['tag']:
@@ -95,12 +97,12 @@ class Maps(object):
             print(e)
             # print response.text
 
-    def fetch_by_coordinate(self, coords, range):
+    def fetch_by_coordinate(self, coords, radius):
         return self.fetch_area((
-            coords[0] - range,
-            coords[1] - range,
-            coords[0] + range,
-            coords[1] + range
+            coords[0] - radius,
+            coords[1] - radius,
+            coords[0] + radius,
+            coords[1] + radius
         ))
 
     def transpose_ways(self, dimensions, offset, flip_y=True):
@@ -162,16 +164,14 @@ class SoundSpectrum:
         spectra are available. Optionally mono can be forced.
         """
         # Get playback frequency
-        nu_play, format, stereo = pygame.mixer.get_init()
+        nu_play, self.format, self.stereo = pygame.mixer.get_init()
         self.nu_play = 1. / nu_play
-        self.format = format
-        self.stereo = stereo
 
         # Load sound and convert to array(s)
         sound = pygame.mixer.Sound(filename)
         a = pygame.sndarray.array(sound)
         a = numpy.array(a)
-        if stereo:
+        if self.stereo:
             if force_mono:
                 self.stereo = 0
                 self.left = (a[:, 0] + a[:, 1]) * 0.5
