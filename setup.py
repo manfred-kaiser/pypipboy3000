@@ -14,8 +14,7 @@ setup(
             'data/*.*',
             'data/images/*.*',
             'data/images/map_icons/*.*',
-            'data/sounds/*.*',
-            'data/sounds/radio/gnr/*.*'
+            'data/sounds/*.*'
         ],
     },
     entry_points={
