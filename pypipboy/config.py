@@ -44,22 +44,19 @@ class SoundManager():
     def __init__(self, configfile):
         self.configfile = configfile
         self._sound_enabled = True
+        self._sounds = {}
         try:
             pygame.mixer.init(44100, -16, 2, 2048)
-            self._sounds = self._get_soundfiles()
         except Exception:
             self._sound_enabled = False
 
-    def _get_soundfiles(self):
-        soundfiles = {}
-        for soundname, soundfile in self.configfile.items('SOUND:FILES'):
-            if not os.path.isfile(soundfile):
-                soundfile = pkg_resources.resource_filename('pypipboy', soundfile)
-            soundfiles[soundname] = pygame.mixer.Sound(soundfile)
-        return soundfiles
-
     def play(self, sound_name):
-        if self._sound_enabled and sound_name in self._sounds:
+        if self._sound_enabled:
+            if sound_name not in self._sounds:
+                sound_filename = self.configfile.get('SOUND:FILES', sound_name)
+                if not os.path.isfile(sound_filename):
+                    sound_filename = pkg_resources.resource_filename('pypipboy', sound_filename)
+                self._sounds[sound_name] = pygame.mixer.Sound(sound_filename)
             self._sounds[sound_name].play()
 
 
