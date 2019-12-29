@@ -45,9 +45,19 @@ GPIO_ACTIONS = {
 }
 
 
-pygame.font.init()
-FONTS = {}
-for x in range(10, 28):
-    FONTS[x] = pygame.font.Font(pkg_resources.resource_filename(
-        'pypipboy', 'data/monofonto.ttf'
-    ), x)
+class FontManager():
+
+    def __init__(self):
+        pygame.font.init()
+        self._fonts = {}
+
+    def __getitem__(self, fontsize):
+        if fontsize not in self._fonts:
+            self._fonts[fontsize] = pygame.font.Font(
+                pkg_resources.resource_filename(
+                    'pypipboy',
+                    'data/monofonto.ttf'
+                ),
+                fontsize
+            )
+        return self._fonts[fontsize]
