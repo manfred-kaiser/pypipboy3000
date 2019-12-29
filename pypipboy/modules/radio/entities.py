@@ -1,10 +1,10 @@
 import os
 from random import choice
 import pygame
-from pypipboy import game
+from pypipboy.game.core import Entity
 
 
-class RadioStation(game.Entity):
+class RadioStation(Entity):
 
     STATES = {
         'stopped': 0,

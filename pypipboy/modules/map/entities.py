@@ -2,12 +2,12 @@ import os
 import threading
 import pkg_resources
 import pygame
-from pypipboy import game
+from pypipboy.game.core import Entity
 from pypipboy import config
 import pypipboy.pypboy.data
 
 
-class Map(game.Entity):
+class Map(Entity):
 
     _mapper = None
     _transposed = None
@@ -81,7 +81,7 @@ class Map(game.Entity):
         self.image.blit(self._map_surface, (0, 0), area=self._render_rect)
 
 
-class MapSquare(game.Entity):
+class MapSquare(Entity):
     _mapper = None
     _size = 0
     _fetching = None
@@ -123,7 +123,7 @@ class MapSquare(game.Entity):
         self.image.blit(self._map_surface, (-self._size / 2, -self._size / 2))
 
 
-class MapGrid(game.Entity):
+class MapGrid(Entity):
 
     _grid = None
     _delta = 0.002

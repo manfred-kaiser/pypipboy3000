@@ -4,11 +4,11 @@ from collections import defaultdict
 import pkg_resources
 import pygame
 
-from pypipboy import game
+from pypipboy.game.core import Entity
 from pypipboy import config
 
 
-class Header(game.Entity):
+class Header(Entity):
 
     def __init__(self, pipboy, headline="", title=""):
         super(Header, self).__init__((
@@ -42,7 +42,7 @@ class Header(game.Entity):
         super(Header, self).update()
 
 
-class Footer(game.Entity):
+class Footer(Entity):
 
     def __init__(self, pipboy):
         self.menu = []
@@ -82,7 +82,7 @@ class Footer(game.Entity):
             offset = offset + 120 + (text_width - 100)
 
 
-class Menu(game.Entity):
+class Menu(Entity):
 
     def __init__(self, submodule, width=100, selected=0):
         super(Menu, self).__init__((width, submodule.parent.pypboy.display.height - 80))
@@ -158,7 +158,7 @@ class MenuItem():
         pass
 
 
-class Scanlines(game.Entity):
+class Scanlines(Entity):
 
     def __init__(self, width, height, gap, speed, colours, full_push=False):
         super(Scanlines, self).__init__((width, height))
@@ -193,7 +193,7 @@ class Scanlines(game.Entity):
         super(Scanlines, self).render(self)
 
 
-class Border(game.Entity):
+class Border(Entity):
     def __init__(self):
         super(Border, self).__init__()
         self.image = pygame.image.load(

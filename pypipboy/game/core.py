@@ -1,5 +1,6 @@
-import pygame
 import time
+import pygame
+from pygame.locals import HWSURFACE, DOUBLEBUF
 
 
 class Engine(object):
@@ -7,9 +8,9 @@ class Engine(object):
     EVENTS_UPDATE = pygame.USEREVENT + 1
     EVENTS_RENDER = pygame.USEREVENT + 2
 
-    def __init__(self, title, width, height, *args, **kwargs):
-        super(Engine, self).__init__(*args, **kwargs)
-        self.window = pygame.display.set_mode((width, height))
+    def __init__(self, title, width, height):
+        super(Engine, self).__init__()
+        self.window = pygame.display.set_mode((width, height), HWSURFACE | DOUBLEBUF)
         self.screen = pygame.display.get_surface()
         pygame.display.set_caption(title)
         pygame.mouse.set_visible(True)
@@ -62,18 +63,18 @@ class EntityGroup(pygame.sprite.LayeredDirty):
 
 
 class Entity(pygame.sprite.DirtySprite):
-    def __init__(self, dimensions=(0, 0), layer=0, *args, **kwargs):
-        super(Entity, self).__init__(*args, **kwargs)
-        self.image = pygame.surface.Surface(dimensions)
-        self.rect = self.image.get_rect()
-        self.image = self.image.convert()
+    def __init__(self, dimensions=(0, 0), layer=0):
+        super(Entity, self).__init__()
+        image = pygame.surface.Surface(dimensions)
+        self.rect = image.get_rect()
+        self.image = image.convert()
         self.groups = pygame.sprite.LayeredDirty()
         self.layer = layer
         self.dirty = 2
         self.blendmode = pygame.BLEND_RGBA_ADD
 
-    def render(self, interval=0, *args, **kwargs):
+    def render(self, interval=0):
         pass
 
-    def update(self, *args, **kwargs):
+    def update(self):
         pass

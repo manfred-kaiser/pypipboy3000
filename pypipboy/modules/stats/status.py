@@ -2,7 +2,7 @@ import pkg_resources
 import pygame
 
 from pypipboy import pypboy
-from pypipboy import game
+from pypipboy.game.core import Entity
 from pypipboy.pypboy.ui import MenuItem
 
 
@@ -22,7 +22,7 @@ class Module(pypboy.SubModule):
         print(menuitem)
 
 
-class Health(game.Entity):
+class Health(Entity):
 
     def __init__(self):
         super(Health, self).__init__()

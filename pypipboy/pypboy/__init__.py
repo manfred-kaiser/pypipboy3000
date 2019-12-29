@@ -1,6 +1,6 @@
 import pkg_resources
 import pygame
-from pypipboy import game
+from pypipboy.game.core import EntityGroup
 from pypipboy import config
 import pypipboy.pypboy.ui
 from pypipboy.pypboy.ui import Menu
@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 
-class BaseModule(game.EntityGroup):
+class BaseModule(EntityGroup):
 
     MODULES = []
 
@@ -96,7 +96,7 @@ class BaseModule(game.EntityGroup):
         self.active.handle_action("resume")
 
 
-class SubModule(game.EntityGroup):
+class SubModule(EntityGroup):
 
     LABEL = None
     headline = None

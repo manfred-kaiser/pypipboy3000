@@ -10,7 +10,7 @@ except ImportError:
     pass
 
 from pypipboy import config
-from pypipboy import game
+from pypipboy.game.core import Engine
 
 from pypipboy.pypboy.ui import Header, Border, Scanlines
 
@@ -23,7 +23,7 @@ class PypboyDisplay():
         self.height = self.configfile.getint('Display', 'height')
 
 
-class Pypboy(game.core.Engine):
+class Pypboy(Engine):
 
     def __init__(self, pipboy_name, configfile=None):
         self.configfile = ConfigParser(allow_no_value=True)
