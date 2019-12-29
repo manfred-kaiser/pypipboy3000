@@ -5,7 +5,6 @@ import pkg_resources
 import pygame
 
 from pypipboy.game.core import Entity
-from pypipboy import config
 
 
 class Header(Entity):

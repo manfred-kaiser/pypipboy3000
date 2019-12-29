@@ -1,7 +1,4 @@
-import pkg_resources
-import pygame
 from pypipboy.game.core import EntityGroup
-from pypipboy import config
 import pypipboy.pypboy.ui
 from pypipboy.pypboy.ui import Menu
 
