@@ -121,9 +121,10 @@ class Pypboy(Engine):
             self.update()
             self.render()
             self.check_gpio_input()
-            pygame.time.wait(10)
+            pygame.time.wait(100)
 
         try:
             pygame.mixer.quit()
         except Exception:
             pass
+

@@ -70,10 +70,11 @@ class SoundManager():
 
     def __init__(self, pipboy):
         self.pipboy = pipboy
-        self._sound_enabled = True
+        self._sound_enabled = self.pipboy.configfile.getboolean('SOUND', 'enabled')
         self._sounds = {}
         try:
-            pygame.mixer.init(44100, -16, 2, 2048)
+            if self._sound_enabled:
+                pygame.mixer.init(44100, -16, 2, 2048)
         except Exception:
             self._sound_enabled = False
 
