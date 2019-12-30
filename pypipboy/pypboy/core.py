@@ -90,7 +90,9 @@ class Pypboy(Engine):
     def check_gpio_input(self):
         for pin, action in self.gpio_actions.items():
             if not GPIO.input(pin):
-                self.handle_action(action)
+                pass
+                # TODO: fix gpio actions
+                # self.handle_action(action)
 
     def set_title(self, headline, title):
         self.header.headline = headline
@@ -109,22 +111,15 @@ class Pypboy(Engine):
     def switch_module(self, module):
         if module in self.modules:
             if self.active:
-                self.active.handle_action("pause")
+                self.active.handle_pause()
                 self.remove(self.active)
             self.active = self.modules[module]
             self.active.parent = self
-            self.active.handle_action("resume")
+            self.active.handle_resume()
             self.add(self.active)
             self.active.switch_submodule(0)
         else:
             print("Module '{}' not implemented.".format(module))
-
-    def handle_action(self, action):
-        if action.startswith('module_'):
-            self.switch_module(action[7:])
-        else:
-            if self.active:
-                self.active.handle_action(action)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:

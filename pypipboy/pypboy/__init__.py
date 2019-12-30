@@ -43,11 +43,6 @@ class BaseModule(EntityGroup):
 
         self.switch_submodule(0)
 
-        self.action_handlers = {
-            "pause": self.handle_pause,
-            "resume": self.handle_resume
-        }
-
     def move(self, x, y):
         super(BaseModule, self).move(x, y)
         if self.active:
@@ -55,12 +50,12 @@ class BaseModule(EntityGroup):
 
     def switch_submodule(self, module):
         if self.active:
-            self.active.handle_action("pause")
+            self.active.handle_pause()
             self.remove(self.active)
         if len(self.submodules) > module:
             self.active = self.submodules[module]
             self.active.parent = self
-            self.active.handle_action("resume")
+            self.active.handle_resume()
             self.footer.select(self.footer.menu[module])
             self.add(self.active)
         else:
@@ -70,15 +65,6 @@ class BaseModule(EntityGroup):
         self.active.render(interval)
         super(BaseModule, self).render(interval)
 
-    def handle_action(self, action, value=0):
-        if action.startswith("knob_"):
-            num = int(action[-1])
-            self.switch_submodule(num - 1)
-        elif action in self.action_handlers:
-            self.action_handlers[action]()
-        else:
-            if self.active:
-                self.active.handle_action(action, value)
 
     def handle_pause(self):
         self.paused = True
@@ -90,7 +76,7 @@ class BaseModule(EntityGroup):
         if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.output(self.GPIO_LED_ID, True)
         self.pypboy.sounds.play('module_change')
-        self.active.handle_action("resume")
+        self.active.handle_resume()
 
 
 class SubModule(EntityGroup):
@@ -106,17 +92,6 @@ class SubModule(EntityGroup):
         self.paused = False
         self.menu = Menu(self)
         self.add(self.menu)
-
-        self.action_handlers = {
-            "pause": self.handle_pause,
-            "resume": self.handle_resume
-        }
-
-    def handle_action(self, action, value=0):
-        if action.startswith("dial_") and self.menu:
-            self.menu.handle_action(action)
-        elif action in self.action_handlers:
-            self.action_handlers[action]()
 
     def handle_pause(self):
         self.paused = True

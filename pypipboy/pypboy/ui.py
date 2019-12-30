@@ -90,8 +90,8 @@ class Menu(Entity):
         self.selected = selected
         self.rect[0] = 4
         self.rect[1] = 60
-        self.submodule.parent.pypboy.actions.add_action(pygame.K_UP, self.handle_action, ['dial_up'])
-        self.submodule.parent.pypboy.actions.add_action(pygame.K_DOWN, self.handle_action, ['dial_down'])
+        self.submodule.parent.pypboy.actions.add_action(pygame.K_UP, self.select_menu_item, ['dial_up'])
+        self.submodule.parent.pypboy.actions.add_action(pygame.K_DOWN, self.select_menu_item, ['dial_down'])
 
     @property
     def items(self):
@@ -106,7 +106,7 @@ class Menu(Entity):
         self.redraw()
         self.items[item].on_select()
 
-    def handle_action(self, action):
+    def select_menu_item(self, action):
         if not self.items:
             return
         if action == "dial_up":
