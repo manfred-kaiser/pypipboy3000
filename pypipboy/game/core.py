@@ -1,4 +1,8 @@
 import time
+import logging
+import os
+from configparser import ConfigParser
+import pkg_resources
 import pygame
 from pygame.locals import HWSURFACE, DOUBLEBUF
 
@@ -8,9 +12,18 @@ class Engine(object):
     EVENTS_UPDATE = pygame.USEREVENT + 1
     EVENTS_RENDER = pygame.USEREVENT + 2
 
-    def __init__(self, title, width, height):
+    def __init__(self, title, configfile):
         super(Engine, self).__init__()
-        self.window = pygame.display.set_mode((width, height), HWSURFACE | DOUBLEBUF)
+
+        self.configfile = ConfigParser(allow_no_value=True)
+        self.configfile.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
+        if configfile:
+            if os.path.isfile(configfile):
+                self.configfile.read(configfile)
+            else:
+                logging.error("configfile '%s' not found!", configfile)
+
+        self.window = pygame.display.set_mode((self.width, self.height), HWSURFACE | DOUBLEBUF)
         self.screen = pygame.display.get_surface()
         pygame.display.set_caption(title)
         pygame.mouse.set_visible(True)
@@ -21,6 +34,14 @@ class Engine(object):
         self.background.fill((0, 0, 0))
 
         self.last_render_time = 0
+
+    @property
+    def width(self):
+        return self.configfile.getint('Display', 'width')
+
+    @property
+    def height(self):
+        return self.configfile.getint('Display', 'height')
 
     def render(self):
         if self.last_render_time == 0:

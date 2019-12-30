@@ -16,41 +16,21 @@ from pypipboy.game.core import Engine
 from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 
-class PypboyDisplay():
-
-    def __init__(self, pipboy):
-        self.pipboy = pipboy
-        self.width = self.pipboy.configfile.getint('Display', 'width')
-        self.height = self.pipboy.configfile.getint('Display', 'height')
-
-
 class Pypboy(Engine):
 
     def __init__(self, pipboy_name, configfile=None):
-        self.configfile = ConfigParser(allow_no_value=True)
-        self.configfile.read(pkg_resources.resource_filename('pypipboy', 'data/default.ini'))
-        if configfile:
-            if os.path.isfile(configfile):
-                self.configfile.read(configfile)
-            else:
-                logging.error("configfile '%s' not found!", configfile)
+        super(Pypboy, self).__init__(pipboy_name, configfile)
 
         self.fonts = FontManager(self)
         self.sounds = SoundManager(self)
+
         self.actions = ActionManager(self)
         self.actions.add_action(pygame.K_F1, self.switch_module, ['stats'])
         self.actions.add_action(pygame.K_F2, self.switch_module, ['items'])
         self.actions.add_action(pygame.K_F3, self.switch_module, ['data'])
 
         self.events = {}
-        self.display = PypboyDisplay(self)
         self.running = False
-
-        super(Pypboy, self).__init__(
-            pipboy_name,
-            self.display.width,
-            self.display.height
-        )
 
         self.active = None
         self.header = Header(self)

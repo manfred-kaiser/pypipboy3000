@@ -11,8 +11,8 @@ class Header(Entity):
 
     def __init__(self, pipboy, headline="", title=""):
         super(Header, self).__init__((
-            pipboy.display.width,
-            pipboy.display.height
+            pipboy.width,
+            pipboy.height
         ))
         self.pipboy = pipboy
         self.headline = headline
@@ -25,17 +25,17 @@ class Header(Entity):
         if new_date != self._date:
             self.image.fill((0, 0, 0))
             pygame.draw.line(self.image, (95, 255, 177), (5, 15), (5, 35), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (5, 15), (self.pipboy.display.width - 154, 15), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 154, 15), (self.pipboy.display.width - 154, 35), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 148, 15), (self.pipboy.display.width - 13, 15), 2)
-            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 13, 15), (self.pipboy.display.width - 13, 35), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (5, 15), (self.pipboy.width - 154, 15), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.width - 154, 15), (self.pipboy.width - 154, 35), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.width - 148, 15), (self.pipboy.width - 13, 15), 2)
+            pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.width - 13, 15), (self.pipboy.width - 13, 35), 2)
 
             text = self.pipboy.fonts[14].render("  %s  " % self.headline, True, (105, 251, 187), (0, 0, 0))
             self.image.blit(text, (26, 8))
             text = self.pipboy.fonts[14].render(self.title, True, (95, 255, 177), (0, 0, 0))
-            self.image.blit(text, ((self.pipboy.display.width - 154) - text.get_width() - 10, 19))
+            self.image.blit(text, ((self.pipboy.width - 154) - text.get_width() - 10, 19))
             text = self.pipboy.fonts[14].render(self._date, True, (95, 255, 177), (0, 0, 0))
-            self.image.blit(text, ((self.pipboy.display.width - 141), 19))
+            self.image.blit(text, ((self.pipboy.width - 141), 19))
             self._date = new_date
 
         super(Header, self).update()
@@ -48,9 +48,9 @@ class FooterMenu(Entity):
         self.parent = parent
         self.pipboy = parent.pipboy
         self.selected = None
-        super(FooterMenu, self).__init__((self.pipboy.display.width, self.pipboy.display.height))
+        super(FooterMenu, self).__init__((self.pipboy.width, self.pipboy.height))
         self.rect[0] = 4
-        self.rect[1] = self.pipboy.display.height - 40
+        self.rect[1] = self.pipboy.height - 40
         self._init_modules()
 
     def _init_modules(self):
@@ -58,15 +58,15 @@ class FooterMenu(Entity):
             self.menu.append(module.LABEL)
         if self.menu:
             self.selected = self.menu[0]
-            self.position = (0, self.pipboy.display.height - 53)
+            self.position = (0, self.pipboy.height - 53)
 
     def select(self, module):
         # self.dirty = 1
         self.selected = module
         self.image.fill((0, 0, 0))
         pygame.draw.line(self.image, (95, 255, 177), (5, 2), (5, 20), 2)
-        pygame.draw.line(self.image, (95, 255, 177), (5, 20), (self.pipboy.display.width - 13, 20), 2)
-        pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.display.width - 13, 2), (self.pipboy.display.width - 13, 20), 2)
+        pygame.draw.line(self.image, (95, 255, 177), (5, 20), (self.pipboy.width - 13, 20), 2)
+        pygame.draw.line(self.image, (95, 255, 177), (self.pipboy.width - 13, 2), (self.pipboy.width - 13, 20), 2)
 
         offset = 20
         for m in self.menu:
@@ -93,7 +93,7 @@ class FooterMenu(Entity):
 class Menu(Entity):
 
     def __init__(self, submodule, width=100, selected=0):
-        super(Menu, self).__init__((width, submodule.parent.pipboy.display.height - 80))
+        super(Menu, self).__init__((width, submodule.parent.pipboy.height - 80))
         self.submodule = submodule
         self._items = defaultdict(list)
         self.selected = selected

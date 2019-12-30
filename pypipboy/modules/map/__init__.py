@@ -19,11 +19,11 @@ class MapModule(SubModule):
 
         mapgrid = Map(
             self.parent.pipboy,
-            self.parent.pipboy.display.width,
+            self.parent.pipboy.width,
             pygame.Rect(
                 4,
-                (self.parent.pipboy.display.width - self.parent.pipboy.display.height) / 2,
-                self.parent.pipboy.display.width - 8, self.parent.pipboy.display.height - 80
+                (self.parent.pipboy.width - self.parent.pipboy.height) / 2,
+                self.parent.pipboy.width - 8, self.parent.pipboy.height - 80
             )
         )
         mapgrid.fetch_map(
