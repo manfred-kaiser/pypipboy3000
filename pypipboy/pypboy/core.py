@@ -10,7 +10,7 @@ except ImportError:
     pass
 
 from pypipboy import config
-from pypipboy.config import FontManager, SoundManager
+from pypipboy.config import FontManager, SoundManager, ActionManager
 from pypipboy.game.core import Engine
 
 from pypipboy.pypboy.ui import Header, Border, Scanlines
@@ -37,6 +37,11 @@ class Pypboy(Engine):
 
         self.fonts = FontManager()
         self.sounds = SoundManager(self.configfile)
+        self.actions = ActionManager(self.configfile)
+        self.actions.add_action(pygame.K_F1, self.switch_module, ['stats'])
+        self.actions.add_action(pygame.K_F2, self.switch_module, ['items'])
+        self.actions.add_action(pygame.K_F3, self.switch_module, ['data'])
+
         self.events = {}
         self.display = PypboyDisplay(self.configfile)
         self.running = False
@@ -110,6 +115,7 @@ class Pypboy(Engine):
             self.active.parent = self
             self.active.handle_action("resume")
             self.add(self.active)
+            self.active.switch_submodule(0)
         else:
             print("Module '{}' not implemented.".format(module))
 
@@ -125,15 +131,11 @@ class Pypboy(Engine):
             if event.key == pygame.K_ESCAPE:
                 self.running = False
             else:
-                if event.key in config.ACTIONS:
-                    self.handle_action(config.ACTIONS[event.key])
+                self.actions.handle_action(event)
         elif event.type == pygame.QUIT:
             self.running = False
         elif event.type in self.events:
             self.events[event.type](event)
-        else:
-            if self.active:
-                self.active.handle_event(event)
 
     def run(self, start_module):
         self._init_modules()

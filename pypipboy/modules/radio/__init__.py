@@ -12,7 +12,7 @@ class RadioModule(pypboy.SubModule):
 
     def __init__(self, parent, configfile=None):
         super(RadioModule, self).__init__(parent, configfile)
-        self.parent.pypboy.register_event(self.EVENT_SONG_END, self.handle_event)
+        self.parent.pypboy.register_event(self.EVENT_SONG_END, self.play_next_song)
         self.stations = {}
         for section in self.parent.pypboy.configfile.sections():
             if section.startswith('Radio:'):
@@ -33,7 +33,6 @@ class RadioModule(pypboy.SubModule):
         self.active_station = self.stations[menuitem.title]
         self.active_station.play_random()
 
-    def handle_event(self, event):
-        if event.type == self.EVENT_SONG_END:
-            if self.active_station:
-                self.active_station.play_random()
+    def play_next_song(self, event):
+        if self.active_station:
+            self.active_station.play_random()

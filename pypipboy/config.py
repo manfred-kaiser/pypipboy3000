@@ -1,20 +1,7 @@
 import os
+from collections import defaultdict
 import pkg_resources
 import pygame
-
-
-ACTIONS = {
-    pygame.K_F1: "module_stats",
-    pygame.K_F2: "module_items",
-    pygame.K_F3: "module_data",
-    pygame.K_1: "knob_1",
-    pygame.K_2: "knob_2",
-    pygame.K_3: "knob_3",
-    pygame.K_4: "knob_4",
-    pygame.K_5: "knob_5",
-    pygame.K_UP: "dial_up",
-    pygame.K_DOWN: "dial_down"
-}
 
 
 try:
@@ -37,6 +24,46 @@ GPIO_ACTIONS = {
     #    31: "dial_up", # GPIO 23
     27: "dial_down"  # GPIO 7
 }
+
+
+class ActionManager():
+
+    class ActionNotUnique(Exception):
+        pass
+
+    class ActionItem():
+
+        def __init__(self, key, callback, params=None, unique=False):
+            self.key = key
+            self.callback = callback
+            self.params = params or []
+            self.unique = unique
+
+        def call(self):
+            self.callback(*self.params)
+
+    def __init__(self, configfile):
+        self.configfile = configfile
+        self._actions = defaultdict(list)
+        self._gpio_mapping = {}
+
+    def add_action(self, key, callback, unique=False):
+        action_item = ActionManager.ActionItem(key, callback, unique)
+        if action_item.unique:
+            for item in self._actions[key]:
+                if item.unique:
+                    raise ActionManager.ActionNotUnique()
+        self._actions[key].append(action_item)
+
+    def add_gpio_mapping(self, pin, key):
+        self._gpio_mapping[pin] = key
+
+    def handle_action(self, event):
+        if event.key in self._actions:
+            for item in self._actions[event.key]:
+                item.call()
+            return True
+        return False
 
 
 class SoundManager():

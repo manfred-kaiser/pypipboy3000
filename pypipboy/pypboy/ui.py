@@ -90,6 +90,8 @@ class Menu(Entity):
         self.selected = selected
         self.rect[0] = 4
         self.rect[1] = 60
+        self.submodule.parent.pypboy.actions.add_action(pygame.K_UP, self.handle_action, ['dial_up'])
+        self.submodule.parent.pypboy.actions.add_action(pygame.K_DOWN, self.handle_action, ['dial_down'])
 
     @property
     def items(self):

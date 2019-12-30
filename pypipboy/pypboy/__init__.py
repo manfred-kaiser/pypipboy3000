@@ -1,3 +1,4 @@
+import pygame
 from pypipboy.game.core import EntityGroup
 import pypipboy.pypboy.ui
 from pypipboy.pypboy.ui import Menu
@@ -33,6 +34,12 @@ class BaseModule(EntityGroup):
         self.footer.selected = self.footer.menu[0]
         self.footer.position = (0, self.pypboy.display.height - 53)  # 80
         self.add(self.footer)
+
+        self.pypboy.actions.add_action(pygame.K_1, self.switch_submodule, [0])
+        self.pypboy.actions.add_action(pygame.K_2, self.switch_submodule, [1])
+        self.pypboy.actions.add_action(pygame.K_3, self.switch_submodule, [2])
+        self.pypboy.actions.add_action(pygame.K_4, self.switch_submodule, [3])
+        self.pypboy.actions.add_action(pygame.K_5, self.switch_submodule, [4])
 
         self.switch_submodule(0)
 
@@ -73,10 +80,6 @@ class BaseModule(EntityGroup):
             if self.active:
                 self.active.handle_action(action, value)
 
-    def handle_event(self, event):
-        if self.active:
-            self.active.handle_event(event)
-
     def handle_pause(self):
         self.paused = True
         if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
@@ -114,9 +117,6 @@ class SubModule(EntityGroup):
             self.menu.handle_action(action)
         elif action in self.action_handlers:
             self.action_handlers[action]()
-
-    def handle_event(self, event):
-        pass
 
     def handle_pause(self):
         self.paused = True
