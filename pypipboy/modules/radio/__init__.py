@@ -1,23 +1,23 @@
 import pygame
-from pypipboy import pypboy
+from pypipboy.pypboy import SubModule
 
 from pypipboy.modules.radio import entities
 from pypipboy.pypboy.ui import MenuItem
 
 
-class RadioModule(pypboy.SubModule):
+class RadioModule(SubModule):
 
     LABEL = "Radio"
     EVENT_SONG_END = pygame.USEREVENT + 1
 
-    def __init__(self, parent, configfile=None):
-        super(RadioModule, self).__init__(parent, configfile)
-        self.parent.pypboy.register_event(self.EVENT_SONG_END, self.play_next_song)
+    def __init__(self, parent):
+        super(RadioModule, self).__init__(parent)
+        self.parent.pipboy.register_event(self.EVENT_SONG_END, self.play_next_song)
         self.stations = {}
-        for section in self.parent.pypboy.configfile.sections():
+        for section in self.parent.pipboy.configfile.sections():
             if section.startswith('Radio:'):
                 radio_station = entities.RadioStation(
-                    configfile=self.parent.pypboy.configfile,
+                    pipboy=self.parent.pipboy,
                     section=section,
                     event=self.EVENT_SONG_END
                 )

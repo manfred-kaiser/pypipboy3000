@@ -41,15 +41,24 @@ class Header(Entity):
         super(Header, self).update()
 
 
-class Footer(Entity):
+class FooterMenu(Entity):
 
-    def __init__(self, pipboy):
+    def __init__(self, parent):
         self.menu = []
-        self.pipboy = pipboy
+        self.parent = parent
+        self.pipboy = parent.pipboy
         self.selected = None
-        super(Footer, self).__init__((self.pipboy.display.width, self.pipboy.display.height))
+        super(FooterMenu, self).__init__((self.pipboy.display.width, self.pipboy.display.height))
         self.rect[0] = 4
         self.rect[1] = self.pipboy.display.height - 40
+        self._init_modules()
+
+    def _init_modules(self):
+        for module in self.parent.submodules:
+            self.menu.append(module.LABEL)
+        if self.menu:
+            self.selected = self.menu[0]
+            self.position = (0, self.pipboy.display.height - 53)
 
     def select(self, module):
         # self.dirty = 1
@@ -84,14 +93,14 @@ class Footer(Entity):
 class Menu(Entity):
 
     def __init__(self, submodule, width=100, selected=0):
-        super(Menu, self).__init__((width, submodule.parent.pypboy.display.height - 80))
+        super(Menu, self).__init__((width, submodule.parent.pipboy.display.height - 80))
         self.submodule = submodule
         self._items = defaultdict(list)
         self.selected = selected
         self.rect[0] = 4
         self.rect[1] = 60
-        self.submodule.parent.pypboy.actions.add_action(pygame.K_UP, self.select_menu_item, ['dial_up'])
-        self.submodule.parent.pypboy.actions.add_action(pygame.K_DOWN, self.select_menu_item, ['dial_down'])
+        self.submodule.parent.pipboy.actions.add_action(pygame.K_UP, self.select_menu_item, ['dial_up'])
+        self.submodule.parent.pipboy.actions.add_action(pygame.K_DOWN, self.select_menu_item, ['dial_down'])
 
     @property
     def items(self):
@@ -111,18 +120,18 @@ class Menu(Entity):
             return
         if action == "dial_up":
             if self.selected > 0:
-                self.submodule.parent.pypboy.sounds.play('dial_move')
+                self.submodule.parent.pipboy.sounds.play('dial_move')
                 self.select(self.selected - 1)
         if action == "dial_down":
             if self.selected < len(self.items) - 1:
-                self.submodule.parent.pypboy.sounds.play('dial_move')
+                self.submodule.parent.pipboy.sounds.play('dial_move')
                 self.select(self.selected + 1)
 
     def redraw(self):
         self.image.fill((0, 0, 0))
         offset = 5
         for i in range(len(self.items)):
-            text = self.submodule.parent.pypboy.fonts[14].render(
+            text = self.submodule.parent.pipboy.fonts[14].render(
                 " %s " % self.items[i].title,
                 True,
                 (105, 255, 187),

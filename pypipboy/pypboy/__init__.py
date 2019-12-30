@@ -1,7 +1,6 @@
 import pygame
 from pypipboy.game.core import EntityGroup
-import pypipboy.pypboy.ui
-from pypipboy.pypboy.ui import Menu
+from pypipboy.pypboy.ui import Menu, FooterMenu
 
 try:
     import RPi.GPIO as GPIO
@@ -13,33 +12,26 @@ class BaseModule(EntityGroup):
 
     MODULES = []
 
-    def __init__(self, boy, configfile=None):
+    def __init__(self, pipboy):
         super(BaseModule, self).__init__()
         self.paused = False
-        self.pypboy = boy
-        self.submodules = []
-        if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
+        self.pipboy = pipboy
+        if self.pipboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.setup(self.GPIO_LED_ID, GPIO.OUT)
             GPIO.output(self.GPIO_LED_ID, False)
 
         self.active = None
-        self.configfile = configfile
+        self.submodules = [module(self) for module in self.MODULES]
         self.position = (0, 40)
 
-        self.footer = pypipboy.pypboy.ui.Footer(self.pypboy)
-        self.footer.menu = []
-        for mod in self.MODULES:
-            self.submodules.append(mod(self, self.configfile))
-            self.footer.menu.append(mod.LABEL)
-        self.footer.selected = self.footer.menu[0]
-        self.footer.position = (0, self.pypboy.display.height - 53)  # 80
+        self.footer = FooterMenu(self)
         self.add(self.footer)
 
-        self.pypboy.actions.add_action(pygame.K_1, self.switch_submodule, [0])
-        self.pypboy.actions.add_action(pygame.K_2, self.switch_submodule, [1])
-        self.pypboy.actions.add_action(pygame.K_3, self.switch_submodule, [2])
-        self.pypboy.actions.add_action(pygame.K_4, self.switch_submodule, [3])
-        self.pypboy.actions.add_action(pygame.K_5, self.switch_submodule, [4])
+        self.pipboy.actions.add_action(pygame.K_1, self.switch_submodule, [0])
+        self.pipboy.actions.add_action(pygame.K_2, self.switch_submodule, [1])
+        self.pipboy.actions.add_action(pygame.K_3, self.switch_submodule, [2])
+        self.pipboy.actions.add_action(pygame.K_4, self.switch_submodule, [3])
+        self.pipboy.actions.add_action(pygame.K_5, self.switch_submodule, [4])
 
         self.switch_submodule(0)
 
@@ -62,20 +54,19 @@ class BaseModule(EntityGroup):
             print("No submodule at {}".format(module))
 
     def render(self, interval):
-        self.active.render(interval)
         super(BaseModule, self).render(interval)
-
+        self.active.render(interval)
 
     def handle_pause(self):
         self.paused = True
-        if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
+        if self.pipboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.output(self.GPIO_LED_ID, False)
 
     def handle_resume(self):
         self.paused = False
-        if self.pypboy.configfile.getboolean('GPIO', 'enabled'):
+        if self.pipboy.configfile.getboolean('GPIO', 'enabled'):
             GPIO.output(self.GPIO_LED_ID, True)
-        self.pypboy.sounds.play('module_change')
+        self.pipboy.sounds.play('module_change')
         self.active.handle_resume()
 
 
@@ -85,10 +76,9 @@ class SubModule(EntityGroup):
     headline = None
     title = None
 
-    def __init__(self, parent, configfile=None):
+    def __init__(self, parent):
         super(SubModule, self).__init__()
         self.parent = parent
-        self.configfile = configfile
         self.paused = False
         self.menu = Menu(self)
         self.add(self.menu)
@@ -97,6 +87,6 @@ class SubModule(EntityGroup):
         self.paused = True
 
     def handle_resume(self):
-        self.parent.pypboy.set_title(self.headline, self.title)
+        self.parent.pipboy.set_title(self.headline, self.title)
         self.paused = False
-        self.parent.pypboy.sounds.play('submodule_change')
+        self.parent.pipboy.sounds.play('submodule_change')

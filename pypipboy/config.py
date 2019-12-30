@@ -42,8 +42,8 @@ class ActionManager():
         def call(self):
             self.callback(*self.params)
 
-    def __init__(self, configfile):
-        self.configfile = configfile
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
         self._actions = defaultdict(list)
         self._gpio_mapping = {}
 
@@ -68,8 +68,8 @@ class ActionManager():
 
 class SoundManager():
 
-    def __init__(self, configfile):
-        self.configfile = configfile
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
         self._sound_enabled = True
         self._sounds = {}
         try:
@@ -80,7 +80,7 @@ class SoundManager():
     def play(self, sound_name):
         if self._sound_enabled:
             if sound_name not in self._sounds:
-                sound_filename = self.configfile.get('SOUND:FILES', sound_name)
+                sound_filename = self.pipboy.configfile.get('SOUND:FILES', sound_name)
                 if not os.path.isfile(sound_filename):
                     sound_filename = pkg_resources.resource_filename('pypipboy', sound_filename)
                 self._sounds[sound_name] = pygame.mixer.Sound(sound_filename)
@@ -89,7 +89,8 @@ class SoundManager():
 
 class FontManager():
 
-    def __init__(self):
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
         pygame.font.init()
         self._fonts = {}
 

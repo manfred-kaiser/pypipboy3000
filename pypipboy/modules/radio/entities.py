@@ -12,9 +12,9 @@ class RadioStation(Entity):
         'paused': 2
     }
 
-    def __init__(self, configfile, section, event):
+    def __init__(self, pipboy, section, event):
         super(RadioStation, self).__init__((10, 10))
-        self.configfile = configfile
+        self.pipboy = pipboy
         self.section = section
         self.state = self.STATES['stopped']
         self.files = self.load_files()
@@ -22,11 +22,11 @@ class RadioStation(Entity):
 
     @property
     def directory(self):
-        return self.configfile.get(self.section, 'directory')
+        return self.pipboy.configfile.get(self.section, 'directory')
 
     @property
     def name(self):
-        return self.configfile.get(self.section, 'name')
+        return self.pipboy.configfile.get(self.section, 'name')
 
     def play_random(self):
         if not self.files:

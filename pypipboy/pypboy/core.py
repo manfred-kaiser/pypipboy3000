@@ -18,10 +18,10 @@ from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 class PypboyDisplay():
 
-    def __init__(self, configfile):
-        self.configfile = configfile
-        self.width = self.configfile.getint('Display', 'width')
-        self.height = self.configfile.getint('Display', 'height')
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
+        self.width = self.pipboy.configfile.getint('Display', 'width')
+        self.height = self.pipboy.configfile.getint('Display', 'height')
 
 
 class Pypboy(Engine):
@@ -35,15 +35,15 @@ class Pypboy(Engine):
             else:
                 logging.error("configfile '%s' not found!", configfile)
 
-        self.fonts = FontManager()
-        self.sounds = SoundManager(self.configfile)
-        self.actions = ActionManager(self.configfile)
+        self.fonts = FontManager(self)
+        self.sounds = SoundManager(self)
+        self.actions = ActionManager(self)
         self.actions.add_action(pygame.K_F1, self.switch_module, ['stats'])
         self.actions.add_action(pygame.K_F2, self.switch_module, ['items'])
         self.actions.add_action(pygame.K_F3, self.switch_module, ['data'])
 
         self.events = {}
-        self.display = PypboyDisplay(self.configfile)
+        self.display = PypboyDisplay(self)
         self.running = False
 
         super(Pypboy, self).__init__(
@@ -65,7 +65,7 @@ class Pypboy(Engine):
         self.gpio_actions = {}
 
     def add_module(self, module_name, module_cls):
-        self.modules[module_name] = module_cls(self, self.configfile)
+        self.modules[module_name] = module_cls(self)
 
     def register_event(self, event, callback):
         self.events[event] = callback

@@ -4,7 +4,7 @@ import pkg_resources
 import pygame
 from pypipboy.game.core import Entity
 from pypipboy import config
-import pypipboy.pypboy.data
+from pypipboy.pypboy.data import Maps
 
 
 class Map(Entity):
@@ -22,8 +22,8 @@ class Map(Entity):
     MAP_ICONS = {}
     AMENITIES = {}
 
-    def __init__(self, pypboy, width, render_rect=None):
-        self.pypboy = pypboy
+    def __init__(self, pipboy, width, render_rect=None):
+        self.pipboy = pipboy
         self.MAP_ICONS = {}
         for icon in pkg_resources.resource_listdir('pypipboy', self._map_icon_path):
             icon_name = icon.rsplit('.', 1)[0]
@@ -33,15 +33,15 @@ class Map(Entity):
         self.AMENITIES = {
             key: self.MAP_ICONS[value]
             for key, value
-            in self.pypboy.configfile.items('MAPICONS')
+            in self.pipboy.configfile.items('MAPICONS')
         }
 
-        self._mapper = pypipboy.pypboy.data.Maps()
+        self._mapper = Maps()
         self._size = width
         self._map_surface = pygame.Surface((width, width))
         self._render_rect = render_rect
         super(Map, self).__init__((width, width))
-        text = self.pypboy.fonts[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
+        text = self.pipboy.fonts[14].render("Loading map...", True, (95, 255, 177), (0, 0, 0))
         self.image.blit(text, (10, 10))
 
     def fetch_map(self, position, radius):
@@ -75,7 +75,7 @@ class Map(Entity):
             image = self.get_map_icon(tag[3])
             pygame.transform.scale(image, (10, 10))
             self._map_surface.blit(image, (tag[1], tag[2]))
-            text = self.pypboy.fonts[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
+            text = self.pipboy.fonts[12].render(tag[0], True, (95, 255, 177), (0, 0, 0))
             self._map_surface.blit(text, (tag[1] + 17, tag[2] + 4))
 
         self.image.blit(self._map_surface, (0, 0), area=self._render_rect)
@@ -89,7 +89,7 @@ class MapSquare(Entity):
     map_position = (0, 0)
 
     def __init__(self, size, map_position, parent):
-        self._mapper = pypipboy.pypboy.data.Maps()
+        self._mapper = Maps()
         self._size = size
         self.parent = parent
         self._map_surface = pygame.Surface((size * 2, size * 2))

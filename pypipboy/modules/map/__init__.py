@@ -1,10 +1,10 @@
 import pygame
-from pypipboy import pypboy
+from pypipboy.pypboy import SubModule
 
 from pypipboy.modules.map.entities import Map
 
 
-class MapModule(pypboy.SubModule):
+class MapModule(SubModule):
 
     LABEL = "Map"
     headline = "Basic Map"
@@ -12,26 +12,26 @@ class MapModule(pypboy.SubModule):
 
     MAPNAME = None
 
-    def __init__(self, parent, configfile=None):
-        super(MapModule, self).__init__(parent, configfile)
+    def __init__(self, parent):
+        super(MapModule, self).__init__(parent)
         if self.MAPNAME is None:
             raise NotImplementedError('Map need MAPNAME')
 
         mapgrid = Map(
-            self.parent.pypboy,
-            self.parent.pypboy.display.width,
+            self.parent.pipboy,
+            self.parent.pipboy.display.width,
             pygame.Rect(
                 4,
-                (self.parent.pypboy.display.width - self.parent.pypboy.display.height) / 2,
-                self.parent.pypboy.display.width - 8, self.parent.pypboy.display.height - 80
+                (self.parent.pipboy.display.width - self.parent.pipboy.display.height) / 2,
+                self.parent.pipboy.display.width - 8, self.parent.pipboy.display.height - 80
             )
         )
         mapgrid.fetch_map(
             (
-                self.parent.pypboy.configfile.getfloat('MAP', 'longitude'),
-                self.parent.pypboy.configfile.getfloat('MAP', 'latitude')
+                self.parent.pipboy.configfile.getfloat('MAP', 'longitude'),
+                self.parent.pipboy.configfile.getfloat('MAP', 'latitude')
             ),
-            self.parent.pypboy.configfile.getfloat('MAP', 'zoom_{}'.format(self.MAPNAME))
+            self.parent.pipboy.configfile.getfloat('MAP', 'zoom_{}'.format(self.MAPNAME))
         )
         self.add(mapgrid)
         mapgrid.rect[0] = 4

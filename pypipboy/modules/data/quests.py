@@ -1,6 +1,6 @@
-from pypipboy import pypboy
+from pypipboy.pypboy import SubModule
 
 
-class Module(pypboy.SubModule):
+class Module(SubModule):
 
     LABEL = "Quests"
