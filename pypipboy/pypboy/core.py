@@ -1,6 +1,3 @@
-import logging
-import os
-from configparser import ConfigParser
 import pkg_resources
 import pygame
 
@@ -18,8 +15,8 @@ from pypipboy.pypboy.ui import Header, Border, Scanlines
 
 class Pypboy(Engine):
 
-    def __init__(self, pipboy_name, configfile=None):
-        super(Pypboy, self).__init__(pipboy_name, configfile)
+    def __init__(self, configfile=None):
+        super(Pypboy, self).__init__(configfile)
 
         self.fonts = FontManager(self)
         self.sounds = SoundManager(self)

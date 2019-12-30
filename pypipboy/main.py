@@ -18,7 +18,7 @@ def main():
     parser.add_argument('--configfile', help='custom configfile')
 
     args = parser.parse_args()
-    boy = Pypboy('Pip-Boy 3000', args.configfile)
+    boy = Pypboy(args.configfile)
 
     boy.add_module('data', data.Module)
     boy.add_module('items', items.Module)

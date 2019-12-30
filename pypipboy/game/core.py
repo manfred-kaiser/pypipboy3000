@@ -12,7 +12,7 @@ class Engine(object):
     EVENTS_UPDATE = pygame.USEREVENT + 1
     EVENTS_RENDER = pygame.USEREVENT + 2
 
-    def __init__(self, title, configfile):
+    def __init__(self, configfile):
         super(Engine, self).__init__()
 
         self.configfile = ConfigParser(allow_no_value=True)
@@ -25,7 +25,7 @@ class Engine(object):
 
         self.window = pygame.display.set_mode((self.width, self.height), HWSURFACE | DOUBLEBUF)
         self.screen = pygame.display.get_surface()
-        pygame.display.set_caption(title)
+        pygame.display.set_caption(self.configfile.get('Display', 'title'))
         pygame.mouse.set_visible(True)
 
         self.groups = []
