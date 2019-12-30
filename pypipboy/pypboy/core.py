@@ -32,10 +32,11 @@ class Pypboy(Engine):
         self.active = None
         self.header = Header(self)
         self.border = Border()
+
         self.scanlines = [
             Scanlines(800, 480, 3, 1, [(0, 13, 3, 50), (6, 42, 22, 100), (0, 13, 3, 50)]),
             Scanlines(800, 480, 8, 40, [(0, 10, 1, 0), (21, 62, 42, 90), (61, 122, 82, 100), (21, 62, 42, 90)] + [(0, 10, 1, 0) for x in range(50)], True)
-        ]
+        ] if self.configfile.getboolean('Display', 'show_scanlines') else []
         self.background = pygame.image.load(pkg_resources.resource_filename('pypipboy', 'data/images/overlay.png'))
 
         self.modules = {}
