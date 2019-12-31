@@ -54,6 +54,6 @@ class RadioStation(Entity):
     def load_files(self):
         files = []
         for f in os.listdir(self.directory) if self.directory else []:
-            if f.endswith(".mp3") or f.endswith(".ogg") or f.endswith(".wav"):
+            if f.endswith(".ogg") or f.endswith(".wav"):
                 files.append(os.path.join(self.directory, f))
         return files
