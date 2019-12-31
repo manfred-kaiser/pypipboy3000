@@ -21,7 +21,7 @@ setup(
         'console_scripts': ['pypipboy=pypipboy.main:main'],
     },
     install_requires=[
-        'pygame',
+        'pygame==2.0.0.dev6',
         'requests',
         'xmltodict',
         'numpy'
