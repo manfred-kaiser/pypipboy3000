@@ -1,31 +1,16 @@
+import os
+from collections import defaultdict
 import pkg_resources
 import pygame
 
-WIDTH = 320
-HEIGHT = 240
 
-MAP_FOCUS = (-102.3016145, 21.8841274)
+try:
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BCM)
+except ImportError:
+    pass
 
-EVENTS = {
-    'SONG_END': pygame.USEREVENT + 1
-}
 
-ACTIONS = {
-    pygame.K_F1: "module_stats",
-    pygame.K_F2: "module_items",
-    pygame.K_F3: "module_data",
-    pygame.K_1: "knob_1",
-    pygame.K_2: "knob_2",
-    pygame.K_3: "knob_3",
-    pygame.K_4: "knob_4",
-    pygame.K_5: "knob_5",
-    pygame.K_UP: "dial_up",
-    pygame.K_DOWN: "dial_down"
-}
-
-SOUND_ENABLED = False
-
-GPIO_AVAILABLE = False
 # Using GPIO.BCM as mode
 GPIO_ACTIONS = {
     4: "module_stats",  # GPIO 4
@@ -41,74 +26,82 @@ GPIO_ACTIONS = {
 }
 
 
-MAP_ICONS = {
-    "camp": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/camp.png'
-    )),
-    "factory": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/factory.png'
-    )),
-    "metro": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/metro.png'
-    )),
-    "misc": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/misc.png'
-    )),
-    "monument": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/monument.png'
-    )),
-    "vault": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/vault.png'
-    )),
-    "settlement": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/settlement.png'
-    )),
-    "ruin": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/ruin.png'
-    )),
-    "cave": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/cave.png'
-    )),
-    "landmark": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/landmark.png'
-    )),
-    "city": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/city.png'
-    )),
-    "office": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/office.png'
-    )),
-    "sewer": pygame.image.load(pkg_resources.resource_filename(
-        'pypipboy', 'data/images/map_icons/sewer.png'
-    )),
-}
+class ActionManager():
 
-AMENITIES = {
-    'pub': MAP_ICONS['vault'],
-    'nightclub': MAP_ICONS['vault'],
-    'bar': MAP_ICONS['vault'],
-    'fast_food': MAP_ICONS['sewer'],
-    'cafe': MAP_ICONS['sewer'],
-    'drinking_water': MAP_ICONS['sewer'],
-    'restaurant': MAP_ICONS['settlement'],
-    'cinema': MAP_ICONS['office'],
-    'pharmacy': MAP_ICONS['office'],
-    'school': MAP_ICONS['office'],
-    'bank': MAP_ICONS['monument'],
-    'townhall': MAP_ICONS['monument'],
-    'bicycle_parking': MAP_ICONS['misc'],
-    'place_of_worship': MAP_ICONS['misc'],
-    'theatre': MAP_ICONS['misc'],
-    'bus_station': MAP_ICONS['misc'],
-    'parking': MAP_ICONS['misc'],
-    'fountain': MAP_ICONS['misc'],
-    'marketplace': MAP_ICONS['misc'],
-    'atm': MAP_ICONS['misc'],
-}
+    class ActionNotUnique(Exception):
+        pass
 
-pygame.font.init()
-FONTS = {}
-for x in range(10, 28):
-    FONTS[x] = pygame.font.Font(pkg_resources.resource_filename(
-        'pypipboy', 'data/monofonto.ttf'
-    ), x)
+    class ActionItem():
+
+        def __init__(self, key, callback, params=None, unique=False):
+            self.key = key
+            self.callback = callback
+            self.params = params or []
+            self.unique = unique
+
+        def call(self):
+            self.callback(*self.params)
+
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
+        self._actions = defaultdict(list)
+        self._gpio_mapping = {}
+
+    def add_action(self, key, callback, unique=False):
+        action_item = ActionManager.ActionItem(key, callback, unique)
+        if action_item.unique:
+            for item in self._actions[key]:
+                if item.unique:
+                    raise ActionManager.ActionNotUnique()
+        self._actions[key].append(action_item)
+
+    def add_gpio_mapping(self, pin, key):
+        self._gpio_mapping[pin] = key
+
+    def handle_action(self, event):
+        if event.key in self._actions:
+            for item in self._actions[event.key]:
+                item.call()
+            return True
+        return False
+
+
+class SoundManager():
+
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
+        self._sound_enabled = self.pipboy.configfile.getboolean('SOUND', 'enabled')
+        self._sounds = {}
+        try:
+            if self._sound_enabled:
+                pygame.mixer.init(44100, -16, 2, 2048)
+        except Exception:
+            self._sound_enabled = False
+
+    def play(self, sound_name):
+        if self._sound_enabled:
+            if sound_name not in self._sounds:
+                sound_filename = self.pipboy.configfile.get('SOUND:FILES', sound_name)
+                if not os.path.isfile(sound_filename):
+                    sound_filename = pkg_resources.resource_filename('pypipboy', sound_filename)
+                self._sounds[sound_name] = pygame.mixer.Sound(sound_filename)
+            self._sounds[sound_name].play()
+
+
+class FontManager():
+
+    def __init__(self, pipboy):
+        self.pipboy = pipboy
+        pygame.font.init()
+        self._fonts = {}
+
+    def __getitem__(self, fontsize):
+        if fontsize not in self._fonts:
+            self._fonts[fontsize] = pygame.font.Font(
+                pkg_resources.resource_filename(
+                    'pypipboy',
+                    'data/monofonto.ttf'
+                ),
+                fontsize
+            )
+        return self._fonts[fontsize]

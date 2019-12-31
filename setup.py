@@ -14,15 +14,14 @@ setup(
             'data/*.*',
             'data/images/*.*',
             'data/images/map_icons/*.*',
-            'data/sounds/*.*',
-            'data/sounds/radio/gnr/*.*'
+            'data/sounds/*.*'
         ],
     },
     entry_points={
         'console_scripts': ['pypipboy=pypipboy.main:main'],
     },
     install_requires=[
-        'pygame',
+        'pygame==2.0.0.dev6',
         'requests',
         'xmltodict',
         'numpy'
