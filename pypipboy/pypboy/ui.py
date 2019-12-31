@@ -92,15 +92,16 @@ class FooterMenu(Entity):
 
 class Menu(Entity):
 
-    def __init__(self, submodule, width=100, selected=0):
+    def __init__(self, pipboy, submodule, width=100, selected=0):
         super(Menu, self).__init__((width, submodule.parent.pipboy.height - 80))
+        self.pipboy = pipboy
         self.submodule = submodule
         self._items = defaultdict(list)
         self.selected = selected
         self.rect[0] = 4
         self.rect[1] = 60
-        self.submodule.parent.pipboy.actions.add_action(pygame.K_UP, self.select_menu_item, ['dial_up'])
-        self.submodule.parent.pipboy.actions.add_action(pygame.K_DOWN, self.select_menu_item, ['dial_down'])
+        self.pipboy.actions.add_action(pygame.K_UP, self.select_menu_item, ['dial_up'])
+        self.pipboy.actions.add_action(pygame.K_DOWN, self.select_menu_item, ['dial_down'])
 
     @property
     def items(self):
@@ -113,18 +114,19 @@ class Menu(Entity):
     def select(self, item):
         self.selected = item
         self.redraw()
-        self.items[item].on_select()
+        if self.pipboy.active.active in self._items:
+            self.items[item].on_select()
 
     def select_menu_item(self, action):
         if not self.items:
             return
         if action == "dial_up":
             if self.selected > 0:
-                self.submodule.parent.pipboy.sounds.play('dial_move')
+                self.pipboy.sounds.play('dial_move')
                 self.select(self.selected - 1)
         if action == "dial_down":
             if self.selected < len(self.items) - 1:
-                self.submodule.parent.pipboy.sounds.play('dial_move')
+                self.pipboy.sounds.play('dial_move')
                 self.select(self.selected + 1)
 
     def redraw(self):

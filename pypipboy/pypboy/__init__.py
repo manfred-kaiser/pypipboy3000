@@ -78,9 +78,10 @@ class SubModule(EntityGroup):
 
     def __init__(self, parent):
         super(SubModule, self).__init__()
+        self.pipboy = parent.pipboy
         self.parent = parent
         self.paused = False
-        self.menu = Menu(self)
+        self.menu = Menu(self.pipboy, self)
         self.add(self.menu)
 
     def handle_pause(self):
